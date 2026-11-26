@@ -9,13 +9,15 @@ The owner is Matt; call him Matt. State your understanding before you start, ask
 | Path | What it is |
 |---|---|
 | `site/index.html` | The whole app (HTML, CSS and JS in one file). It runs as a Claude artifact or as any static site. |
-| `site/data/countries.json` | Natural Earth 1:50m borders. Per-country properties: `n` name, `iso`, `lx`/`ly` label point, `st` status for US-movies mode, `lo` status for Country-specific mode. |
-| `site/data/markets.json` | Film data keyed by ISO2. Currently only `GB`. |
+| `site/data/countries.json` | Natural Earth 1:50m borders. Per-country properties: `n` name, `iso`, `lx`/`ly` label point, `st` status for US-movies mode, `lo` status for Country-specific mode. Status values: `has` (has films) or `none` (no data). |
+| `site/data/markets.json` | Film data keyed by ISO2 for every country with data (98 entries), plus `GLOBAL` (Global Top 10) and the marker territories `GP`, `MQ`, `RE`. |
 | `site/posters/*.jpg` | Poster images (JustWatch `s332` size). |
 | `scripts/fetch_justwatch_offers.py` | Fetches the JustWatch US page for each film and pulls the JSON-LD direct links and `countryOfOrigin`. |
-| `scripts/build_markets.py` | Builds `markets.json` and sets the `lo` flags in `countries.json`. Hard-coded to the UK in places; generalise it. |
+| `scripts/build_markets.py` | Builds `markets.json` for every country and sets the `st`/`lo` statuses in `countries.json`. Also writes `scripts/posters_manifest.json`. |
+| `scripts/fetch_posters.py` | Downloads the posters listed in `posters_manifest.json` (JustWatch `s332` first). |
+| `scripts/find_justwatch_slugs.py` | Finds JustWatch pages for guide-2 films with no working JustWatch link, accepting a page only when its year matches. Results: `scripts/justwatch_slug_matches.json`. |
 | `scripts/prep_countries.py` | Builds `countries.json` from Natural Earth. |
-| `scripts/justwatch_offers_uk.json` | Cached JustWatch offers for the 17 UK films. |
+| `scripts/justwatch_offers.json` | Cached JustWatch offers, origin and poster for every unique film (135 pages). Re-runs only fetch what's missing. |
 | `source/Holiday-Films-US-Ratings.csv` | **Guide 1**: what each country watches most. 942 rows, 96 `audience_market` values, US ratings, US watch options. |
 | `source/Holiday-Films-by-Country-of-Origin.csv` | **Guide 2**: films made in each country. 138 rows, 42 `country` sections, local ratings, subscription, free, rental and purchase services. |
 | `source/*.docx` | The two guides as documents, including their methods and limits. Read the rating and ranking caveats. |
@@ -92,6 +94,25 @@ There is no separate "global" file. Each guide ends with a **Global Top Ten** se
 - Guide 1 has extra rows: "Global Top Ten", "China unranked example", Hong Kong, Taiwan, Guadeloupe, Martinique, Réunion and New Caledonia. The last four have no shape of their own on the Natural Earth 1:50m map, and guide 2 has a separate "Soviet Union" section. How should each be shown? (Ideas: a global top ten button, map markers for the territories, Soviet Union under Russia.)
 - Many guide-1 films (for example Netflix originals) aren't in guide 2, so US-made filtering will often depend on JustWatch's single-country origin. Is that acceptable?
 - Should "Open United Kingdom" on the welcome card stay, or change (for example to the visitor's detected country)?
+
+### Answers (Matt, 26 Nov 2026), now built
+- "Global Top Ten": its own panel (`GLOBAL`), opened from the **Global Top 10** button at the bottom left. US movies only.
+- "China unranked example": dropped (its two films are Chinese-made and already in guide 2 under China).
+- Guadeloupe, Martinique, Réunion: clickable **map markers**. Hong Kong, Taiwan and New Caledonia use their own shapes.
+- "Soviet Union": merged into **Russia**'s Country specific list, each film labelled "(Soviet-era film)".
+- Origin: guide 2 by normalised title + year (or watch URL), else JustWatch `countryOfOrigin`, flagged. Films with neither are left out of US movies mode.
+- Welcome card: one CTA, **"Open <detected country>"** (time zone, then browser language; falls back to the UK). "Spin to my country" was removed.
+- No data in the current mode (clicking a shape or marker, or toggling inside a panel): the **Santa card** opens, with a button to the other mode when that has films.
+
+## Build commands
+```
+python3 -I scripts/fetch_justwatch_offers.py scripts/justwatch_offers.json --from-csv source/Holiday-Films-US-Ratings.csv source/Holiday-Films-by-Country-of-Origin.csv
+python3 -I scripts/find_justwatch_slugs.py source/Holiday-Films-by-Country-of-Origin.csv scripts/justwatch_offers.json scripts/justwatch_slug_matches.json
+python3 -I scripts/build_markets.py scripts/justwatch_offers.json site source/Holiday-Films-US-Ratings.csv source/Holiday-Films-by-Country-of-Origin.csv
+python3 -I scripts/fetch_posters.py scripts/posters_manifest.json site/posters
+python3 -I scripts/build_markets.py scripts/justwatch_offers.json site source/Holiday-Films-US-Ratings.csv source/Holiday-Films-by-Country-of-Origin.csv
+```
+Playwright in the cloud container must launch Chromium with `proxy: { server: process.env.HTTPS_PROXY, bypass: 'localhost,127.0.0.1' }`, or the CDN scripts never load. A WebGL screenshot takes about 20 s there.
 
 ## 5. Environment notes
 
