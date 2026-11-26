@@ -5,7 +5,7 @@
 # Run order: fetch_justwatch_offers.py -> build_markets.py -> fetch_posters.py -> build_markets.py (picks up the downloaded posters).
 #
 # Decisions (agreed with Matt, Nov 2026):
-#   - US movies mode   = guide 1 most-watched list per audience_market, keeping films with United States among producing countries.
+#   - Global Top 10 mode (data key 'us') = guide 1 most-watched list per audience_market, all films (the US-made filter was removed 26 Nov 2026).
 #   - Country specific = guide 2 films made in that country, rated by that country's own board. Never convert ratings.
 #   - "Global Top Ten" -> its own market (key GLOBAL), opened from a button.  "China unranked example" -> dropped.
 #   - Guadeloupe, Martinique, Reunion -> own markets (GP, MQ, RE), shown as map markers.
@@ -181,14 +181,16 @@ for name,rs in rows.items():
   iso,shell=market_shell(name); films=[]
   for r in sorted(rs,key=lambda r:int(r['rank'])):
     t=r['original_title_and_english_title']; r2,origin,osrc=g1_origin(r)
-    if osrc=='unknown': report['origin unknown (left out of US movies)'].append(f'{name}: {t}')
-    if 'United States' not in origin: continue
+    # Global Top 10 mode (Matt, 26 Nov 2026): every film in the country's Top 10, wherever it was made
+    if osrc=='unknown': report['origin unknown (shown as "Origin not recorded")'].append(f'{name}: {t}')
     rating=r['us_tv_rating'] if r['us_rating_filter']=='TV rating only' else r['us_rating_filter']
+    # prefer the guide-2 row's JustWatch page when this row's own link has none (e.g. a year-verified slug match)
+    wurl=r2['us_watch_url'] if r2 and not jwrec(r['us_watch_url']) and jwrec(r2['us_watch_url']) else r['us_watch_url']
     films.append({'pos':int(r['rank']),'title':t,'year':int(r['release_year']),'min':int(r['runtime_minutes']),
       'rating':rating or 'Unverified','usr':r['us_mpa_rating'] or r['us_tv_rating'],'cert':r['rating_certificate'],
       'index':float(r['index']) if r['index'] else None,'origin':origin,'originSrc':osrc,
-      'poster':poster(t,r['release_year'],r['poster_or_image_url'],(jwrec(r['us_watch_url']) or {}).get('image')),
-      'trailer':trailer(t,r['release_year']),'jw':jwlink(r['us_watch_url'],t),'watch':{'US':watch(r2,r['us_watch_url'],r['us_watch_options'])}})
+      'poster':poster(t,r['release_year'],r['poster_or_image_url'],(jwrec(wurl) or {}).get('image')),
+      'trailer':trailer(t,r['release_year']),'jw':jwlink(wurl,t),'watch':{'US':watch(r2,wurl,r['us_watch_options'])}})
   m=markets.setdefault(iso,shell)
   m['us']={'sources':'National + Netflix + JustWatch index','films':films}
   if not films: report['guide-1 market with no US-made films'].append(name)

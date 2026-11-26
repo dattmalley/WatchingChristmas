@@ -46,11 +46,11 @@ There is no separate "global" file. Each guide ends with a **Global Top Ten** se
 - **Welcome card:** shows on **every visit** (Matt, 26 Nov 2026; it used to show on the first visit only). It contains:
   - the title in Cherry Swash red with a drop shadow and no outline;
   - the line "Spin the globe and tap a country to see the Christmas films it watches most, ranked, rated and linked straight to the stream.";
-  - the toggle **US movies | Country specific** with one line of help;
-  - two CTAs: **"Open <detected country>"** (for example "Open France"), which flies to that country and opens its panel, or the Santa card if it has no data in the current mode; and **"Explore the globe"**, which closes the card so the visitor can spin the globe themselves.
+  - the toggle **Global Top 10 | Country specific** (Global Top 10 first and default) with one line of help;
+  - three CTAs: **"🎄 Open <detected country>"** (flies there and opens its panel, or the Santa card if it has no data in the current mode), **"Global Top 10"** (opens the world list) and **"Explore the globe"** (closes the card).
   The country is guessed from the time zone, then the browser language, falling back to the United Kingdom. The artifact host blocks the geolocation API, so there's no permission prompt. (This replaced the earlier "Open United Kingdom" and "Spin to my country" buttons; see section 4.)
 - **Toggle meaning (decided by Matt, don't change it):**
-  - **US movies:** the clicked country's guide-1 most-watched list, keeping only films with **United States among their producing countries** (co-productions count). Numbers are that country's ranks. The filter uses US ratings: All, G, PG, PG-13, R, TV, Unverified. Each row shows the index score.
+  - **Global Top 10** (Matt, 26 Nov 2026; replaced "US movies" as the first option, data key still `us`): the clicked country's **complete** guide-1 most-watched Top 10, **every film wherever it was made** (the US-made filter was removed). Numbers are that country's ranks. The filter uses US ratings: All, G, PG, PG-13, R, TV, Unverified. Each row shows the index score and its origin line. The world list (`GLOBAL`) opens from the bottom-left button and the welcome card's "Global Top 10" button.
   - **Country specific:** the clicked country's guide-2 list of films made there, filtered by **that country's own rating** (UK: BBFC U, PG, 12A, 15, 18, Unverified), with the US rating shown beside it as a dashed chip. It's numbered in research order and labelled as not a viewing ranking. Never convert ratings between countries.
   - Film origin comes from guide 2's `country_of_origin` by title match. If a film isn't in guide 2, fall back to JustWatch's `countryOfOrigin` and flag it in the row as "(origin per JustWatch)". JustWatch gives only one country and is sometimes wrong, so prefer the documents.
   - The mode is remembered in localStorage (`cw-mode`), and the globe recolours per mode.
@@ -102,11 +102,11 @@ There is no separate "global" file. Each guide ends with a **Global Top Ten** se
 - Should "Open United Kingdom" on the welcome card stay, or change (for example to the visitor's detected country)?
 
 ### Answers (Matt, 26 Nov 2026), now built
-- "Global Top Ten": its own panel (`GLOBAL`), opened from the **Global Top 10** button at the bottom left. US movies only.
+- "Global Top Ten": its own panel (`GLOBAL`), opened from the **Global Top 10** button at the bottom left and on the welcome card. Global Top 10 mode only.
 - "China unranked example": dropped (its two films are Chinese-made and already in guide 2 under China).
 - Guadeloupe, Martinique, Réunion: clickable **map markers**. Hong Kong, Taiwan and New Caledonia use their own shapes.
 - "Soviet Union": merged into **Russia**'s Country specific list, each film labelled "(Soviet-era film)".
-- Origin: guide 2 by normalised title + year (or watch URL), else JustWatch `countryOfOrigin`, flagged. Films with neither are left out of US movies mode.
+- Origin: guide 2 by normalised title + year (or watch URL), else JustWatch `countryOfOrigin`, flagged. Films with neither show "Origin not recorded" (they were left out while the US-made filter existed).
 - Welcome card: shows on every visit, with **"Open <detected country>"** (time zone, then browser language; falls back to the UK) and **"Explore the globe"**. "Spin to my country" was removed.
 - No data in the current mode (clicking a shape or marker, or toggling inside a panel): the **Santa card** opens, with a button to the other mode when that has films.
 

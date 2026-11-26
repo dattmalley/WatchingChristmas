@@ -72,7 +72,7 @@ header.bar {
   padding: 12px 22px; font-weight: 600; font-size: 15px; text-decoration: none;
 }
 .btn-red { background: var(--holly); color: #fff; box-shadow: 0 10px 26px rgba(200,35,46,.45); transition: background .2s, color .2s, box-shadow .2s; }
-/* hover and keyboard focus invert to the look of the selected "US movies" pill: snow with holly text, no gold ring */
+/* hover and keyboard focus invert to the look of the selected mode pill: snow with holly text, no gold ring */
 .btn-red:hover, .btn-red:focus-visible { background: var(--snow); color: var(--holly); box-shadow: 0 4px 10px rgba(0,0,0,.2); outline: none; }
 .btn .emoji { font-size: 17px; line-height: 1; }
 .btn-ghost { background: var(--glass); color: var(--on-red); border: 1px solid var(--glass-line); }
@@ -291,7 +291,7 @@ header.bar {
 <header class="bar">
   <button class="pill brand" id="home" type="button" aria-label="Watching Christmas: open the welcome card">
     <span class="wordmark">Watching Christmas</span>
-    <span class="mode-chip" id="modeChip">US movies</span>
+    <span class="mode-chip" id="modeChip">Global Top 10</span>
   </button>
 </header>
 
@@ -318,7 +318,7 @@ header.bar {
   <div class="mode">
     <span class="mode-label" id="wModeLabel">Show me</span>
     <div class="seg" role="radiogroup" aria-labelledby="wModeLabel" data-seg>
-      <button type="button" role="radio" data-mode="us">US movies</button>
+      <button type="button" role="radio" data-mode="us">Global Top 10</button>
       <button type="button" role="radio" data-mode="local">Country specific</button>
     </div>
     <div class="mode-help" id="wHelp"></div>
@@ -327,6 +327,10 @@ header.bar {
     <button class="btn btn-red" id="openMine" type="button">
       <span class="emoji" aria-hidden="true">🎄</span>
       <span id="openMineLbl">Open United Kingdom</span>
+    </button>
+    <button class="btn btn-ghost" id="openGlobal" type="button">
+      <svg width="16" height="16" viewBox="0 0 24 24" aria-hidden="true"><path d="m12 3 2.7 5.6 6.1.8-4.5 4.2 1.1 6.1L12 16.8l-5.4 2.9 1.1-6.1-4.5-4.2 6.1-.8z" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linejoin="round"/></svg>
+      Global Top 10
     </button>
     <button class="btn btn-ghost" id="explore" type="button">
       <svg width="16" height="16" viewBox="0 0 24 24" aria-hidden="true"><circle cx="12" cy="12" r="9" fill="none" stroke="currentColor" stroke-width="2"/><path d="M3 12h18M12 3c2.6 2.6 3.8 5.6 3.8 9s-1.2 6.4-3.8 9c-2.6-2.6-3.8-5.6-3.8-9S9.4 5.6 12 3z" fill="none" stroke="currentColor" stroke-width="1.6"/></svg>
@@ -398,7 +402,7 @@ header.bar {
           <svg width="16" height="16" viewBox="0 0 24 24" aria-hidden="true"><path d="M6 6l12 12M18 6 6 18" stroke="currentColor" stroke-width="2.6" stroke-linecap="round"/></svg>
         </button>
         <div class="seg small" role="radiogroup" aria-label="Which films" data-seg>
-          <button type="button" role="radio" data-mode="us">US movies</button>
+          <button type="button" role="radio" data-mode="us">Global Top 10</button>
           <button type="button" role="radio" data-mode="local">Country specific</button>
         </div>
       </div>
@@ -422,8 +426,8 @@ const store = { get(k) { try { return localStorage.getItem(k); } catch (e) { ret
 
 const MODES = {
   us: {
-    label: "US movies",
-    help: "The films each country watches most at Christmas, keeping only those made in the United States. Rated by the US system (G, PG, PG-13, R).",
+    label: "Global Top 10",                // the data key stays "us" (guide 1); renamed and unfiltered 26 Nov 2026
+    help: "The Christmas films each country watches most: its full Top 10, wherever they were made. Rated by the US system (G, PG, PG-13, R).",
     key: "us"
   },
   local: {
@@ -592,7 +596,7 @@ function showToast(msg) {
 /* ===== Map key ("?") ===== */
 function renderKey() {
   const rows = mode === "us"
-    ? [["#C8232E", "Has films: tap for its Top 10 made in the US"], ["var(--cane)", "No data (candy cane): tap to see Santa's note"]]
+    ? [["#C8232E", "Has films: tap for its Christmas Top 10"], ["var(--cane)", "No data (candy cane): tap to see Santa's note"]]
     : [["#C8232E", "Has films: tap for the films made there"], ["var(--cane)", "No data (candy cane): tap to see Santa's note"]];
   $("#keyPanel").innerHTML = `<h4>Map key · ${esc(MODES[mode].label)}</h4>` + rows.map(([c, t]) => `<span><i style="background:${c}"></i>${esc(t)}</span>`).join("")
     + `<span><i class="dot"></i>Island marker (Guadeloupe, Martinique, Réunion)</span>`
@@ -647,6 +651,7 @@ function closeWelcome(then) {
   gsap.timeline({ onComplete: done }).to("#welcome", { y: 30, opacity: 0, duration: .25, ease: "power2.in" }).to("#wScrim", { opacity: 0, duration: .2 }, "<.05");
 }
 $("#wClose").addEventListener("click", () => closeWelcome());
+$("#openGlobal").addEventListener("click", () => closeWelcome(() => { setMode("us"); openCountry("GLOBAL"); }));
 $("#explore").addEventListener("click", () => closeWelcome(() => { if (globe) globe.controls().autoRotate = !reduceMotion; }));
 $("#wScrim").addEventListener("click", () => closeWelcome());
 $("#home").addEventListener("click", () => {
@@ -759,8 +764,8 @@ function renderPanel(animate) {
   const auth = !isUS && m.local.authority;
   $("#mSub").textContent = isUS
     ? (m.code === "global"
-      ? `From the global Christmas Top 10 (combined TV, Netflix and JustWatch evidence), keeping the films made in the United States. Numbers are the global ranks.`
-      : `From ${the(m)}${m.code}'s Christmas Top 10 (combined TV, Netflix and JustWatch evidence), keeping the films made in the United States. Numbers are the ${m.code} ranks.`)
+      ? `The world's Christmas Top 10, from combined TV, Netflix and JustWatch evidence. Numbers are the global ranks.`
+      : `${m.the ? "The " : ""}${m.code}'s Christmas Top 10, from combined TV, Netflix and JustWatch evidence. Numbers are the ${m.code} ranks.`)
     : `Christmas films produced in ${the(m)}${m.code}, ${auth ? `rated by ${/^(BBFC|MPA|FSK|CNC|ICAA|KAVI|KMRB)$/.test(auth) ? "the " : ""}${auth}` : "with no local rating verified yet"}. Numbered in research order, not by audience size.`;
   $("#mFoot").innerHTML = isUS
     ? `<span>Watch links: United States, from JustWatch, checked 24–26 Nov 2026. Ratings: MPA, checked 25 Nov 2026.</span><span>Index is a composite estimate, not a viewer count.</span>`
@@ -828,7 +833,7 @@ function renderNoData() {
   const isGlobal = ndISO === "GLOBAL";
   $("#nTitle").textContent = name;
   $("#nWhy").textContent = mode === "us"
-    ? (isGlobal ? "The global list only exists as a US movies Top 10." : `Neither guide ranks what ${name} watches at Christmas, so there's no US movies list here yet.`)
+    ? (isGlobal ? "The global list only exists as a Top 10." : `Neither guide ranks what ${name} watches at Christmas, so there's no Top 10 here yet.`)
     : (isGlobal ? "There's no Country specific list for the whole world." : `The guides list no Christmas films made in ${name}, so there's no Country specific list here yet.`);
   $("#nCta").innerHTML = hasData(ndISO, other)
     ? `<button class="btn btn-snow" type="button" data-switch="${other}">See its ${esc(MODES[other].label)} list</button>`
