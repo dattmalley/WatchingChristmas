@@ -16,6 +16,7 @@ The owner is Matt; call him Matt. State your understanding before you start, ask
 | `scripts/build_markets.py` | Builds `markets.json` for every country and sets the `st`/`lo` statuses in `countries.json`. Also writes `scripts/posters_manifest.json`. |
 | `scripts/fetch_posters.py` | Downloads the posters listed in `posters_manifest.json` (JustWatch `s332` first). |
 | `scripts/find_justwatch_slugs.py` | Finds JustWatch pages for guide-2 films with no working JustWatch link, accepting a page only when its year matches. Results: `scripts/justwatch_slug_matches.json`. |
+| `.github/workflows/pages.yml` | Publishes `site/` to GitHub Pages on every push to `main` (https://dattmalley.github.io/WatchingChristmas/). Needs Settings → Pages → Source: "GitHub Actions" turned on once. |
 | `scripts/prep_countries.py` | Builds `countries.json` from Natural Earth. |
 | `scripts/justwatch_offers.json` | Cached JustWatch offers, origin and poster for every unique film (135 pages). Re-runs only fetch what's missing. |
 | `source/Holiday-Films-US-Ratings.csv` | **Guide 1**: what each country watches most. 942 rows, 96 `audience_market` values, US ratings, US watch options. |
