@@ -13,7 +13,7 @@
 #   - Origin: guide 2 by title (normalised) + year, or by watch URL; else JustWatch countryOfOrigin, flagged.
 import csv,json,sys,re,os,unicodedata,collections
 OFFERS,P,C1,C2=sys.argv[1:5]
-C3=sys.argv[5] if len(sys.argv)>5 else None   # optional trailers CSV (trailer_url per film)
+C3=sys.argv[5] if len(sys.argv)>5 else None   # optional trailers CSV: one row per film or per country entry, with trailer_url
 HERE=os.path.dirname(os.path.abspath(__file__))
 jw=json.load(open(OFFERS))
 g1=list(csv.DictReader(open(C1,encoding='utf-8-sig')))
@@ -46,7 +46,11 @@ def norm(t):
   t=unicodedata.normalize('NFKD',t).encode('ascii','ignore').decode().lower().replace('&','and')
   return ' '.join(re.sub(r'[^a-z0-9 ]',' ',t).split())
 # guide watch URLs that are not JustWatch pages but have one (verified: same Netflix title ID in the JustWatch watch link)
-SLUG_ALIAS={'https://www.netflix.com/title/82090597':'a-dogs-perfect-christmas'}
+SLUG_ALIAS={'https://www.netflix.com/title/82090597':'a-dogs-perfect-christmas',
+            # guide link is dead; this page is the 1947 film (dateCreated 1947, made in the US)
+            'https://www.justwatch.com/us/movie/miracle-on-34th-street-1947':'miracle-on-34th-street',
+            # guide 1 gives the 1994 film the 1947 film's page; the 1994 film has its own (dateCreated 1994)
+            'https://www.justwatch.com/us/movie/miracle-on-34th-street':'miracle-on-34th-street-1994'}
 def slug(url): return SLUG_ALIAS.get(url) or (url.rstrip('/').split('/')[-1] if url.startswith(JWP) else None)
 def jwrec(url): return jw.get(slug(url) or '',None)
 import urllib.parse
@@ -148,9 +152,12 @@ report=collections.defaultdict(list)
 # ---------- trailers (Matt's CSV, researched 26 Nov 2026), matched by normalised title + year ----------
 TRAILER={}
 if C3:
-  for r in csv.DictReader(open(C3,encoding='utf-8-sig')):
+  C3ROWS=list(csv.DictReader(open(C3,encoding='utf-8-sig')))
+  for r in C3ROWS:
+    t=r.get('title') or r.get('original_title_and_english_title') or ''; y=r.get('year') or r.get('release_year') or ''
     if r['trailer_url'].strip():
-      TRAILER.setdefault((norm(r['title']),r['year']),{'url':r['trailer_url'].strip(),'platform':r['trailer_platform'].strip()})
+      TRAILER.setdefault((norm(t),y),{'url':r['trailer_url'].strip(),'platform':r['trailer_platform'].strip()})
+else: C3ROWS=[]
 trailer_hits=set()
 def trailer(title,year):
   t=TRAILER.get((norm(title),str(year)))
@@ -223,6 +230,25 @@ for name in sorted(loc,key=lambda n:n=='Soviet Union'):   # Russia's own films f
     if name=='Soviet Union': f['era']='Soviet Union'
     L['films'].append(f)
   L['scale']=sorted({f['rating'] for f in L['films'] if f['rating']!='Unverified'},key=lambda x:(age(x),x))
+
+# ---------- films only in the guide's poster index (entry_type poster_index_only in the all-entries CSV) ----------
+# They belong to no country list. Each joins the Country specific list of the country JustWatch says made it
+# (decided by Matt, 26 Nov 2026: all five are US-made, so they follow the US list's 10), flagged as origin per JustWatch.
+for r in [r for r in C3ROWS if r.get('entry_type')=='poster_index_only']:
+  t=r['title'] or r['original_title_and_english_title']; y=r['year'] or r['release_year']
+  rec=jwrec(r['us_watch_url']); o=rec and rec.get('origin')
+  if isinstance(o,list): o=o[0] if o else None
+  iso=ISO.get(o) if o else None
+  if not iso or iso not in markets or 'local' not in markets[iso]:
+    report['poster-index film not placed'].append(f'{t} ({y}): origin {o!r}'); continue
+  L=markets[iso]['local']; auth=L['authority']
+  rating=(r['us_mpa_rating'] if auth=='MPA' and r['us_mpa_rating'] else 'Unverified')
+  L['films'].append({'pos':len(L['films'])+1,'title':t,'year':int(y),'min':int(r['runtime_minutes']),'rating':rating,
+     'hot':False,'authority':auth,'usr':r['us_mpa_rating'] or r['us_tv_rating'] or '','origin':[o],'originSrc':'justwatch',
+     'ratingSrc':r['rating_source'],'poster':poster(t,y,r['poster_or_image_url'],(rec or {}).get('image')),
+     'trailer':trailer(t,y),'jw':jwlink(r['us_watch_url'],t),'watch':{'US':watch(None,r['us_watch_url'],r['us_watch_options'])},'source':'poster index'})
+  L['scale']=sorted({f['rating'] for f in L['films'] if f['rating']!='Unverified'},key=lambda x:(age(x),x))
+  report['poster-index film added'].append(f'{t} ({y}) -> {iso} Country specific #{len(L["films"])}')
 
 # ---------- write ----------
 json.dump(markets,open(P+'/data/markets.json','w'),ensure_ascii=False,separators=(',',':'))

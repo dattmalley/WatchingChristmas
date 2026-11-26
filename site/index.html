@@ -19,6 +19,7 @@
   --pine: #21402F;
   --sage: #CBE0BE;
   --gold: #F7C948;
+  --xmas-green: #00873E;   /* hover on countries with films (globe; mirrored in COL.hasHover) */
   --ink: #2B1A1C;
   --muted: #7A6466;
   --on-red: #FFF4F1;
@@ -450,7 +451,7 @@ const nameOf = iso => (MARKETS[iso] && MARKETS[iso].name) || (features.find(f =>
 /* ===== Globe ===== */
 let globe, features = [], hoverF = null;
 /* Globe status per mode: "has" (has films) or "none" (no data) */
-const COL = { has: "rgba(200,35,46,.95)", hasHover: "rgba(232,64,72,1)", none: "rgba(58,35,38,.85)", noneHover: "rgba(90,58,62,.95)", side: "rgba(20,8,10,.6)", stroke: "rgba(255,240,230,.55)" };
+const COL = { has: "rgba(200,35,46,.95)", hasHover: "#00873E" /* Christmas green (Matt): countries with films */, none: "rgba(58,35,38,.85)", noneHover: "rgba(90,58,62,.95)", side: "rgba(20,8,10,.6)", stroke: "rgba(255,240,230,.55)" };
 const st = f => f.properties[MODES[mode].key === "us" ? "st" : "lo"] === "has" ? "has" : "none";
 const capColor = f => COL[st(f) + (f === hoverF ? "Hover" : "")];
 const altFor = f => st(f) === "has" ? (f === hoverF ? 0.04 : 0.03) : (f === hoverF ? 0.018 : 0.006);

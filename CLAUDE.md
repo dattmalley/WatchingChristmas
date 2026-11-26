@@ -21,7 +21,8 @@ The owner is Matt; call him Matt. State your understanding before you start, ask
 | `scripts/justwatch_offers.json` | Cached JustWatch offers, origin and poster for every unique film (135 pages). Re-runs only fetch what's missing. |
 | `source/Holiday-Films-US-Ratings.csv` | **Guide 1**: what each country watches most. 942 rows, 96 `audience_market` values, US ratings, US watch options. |
 | `source/Holiday-Films-by-Country-of-Origin.csv` | **Guide 2**: films made in each country. 138 rows, 42 `country` sections, local ratings, subscription, free, rental and purchase services. |
-| `source/Holiday-Film-Trailers.csv` | Matt's trailer list (26 Nov 2026): guide data plus `trailer_url` and `trailer_platform` for all 161 unique films (157 with a trailer). `build_markets.py` matches it by title + year and adds `trailer: {url, platform}` to each film, shown as a **"Watch trailer"** button under the origin line. Films without one show no button. |
+| `source/Holiday-Films-All-Country-Entries-With-Trailers.csv` | Matt's all-entries file (26 Nov 2026): one row per country entry (1,095), each with `trailer_url`. **The build's trailer source.** Trailers are identical for a film across countries. Its 5 `poster_index_only` films (A Christmas Carol 2009, Candy Cane Lane, Love the Coopers, Miracle on 34th Street 1947, Scrooged) belong to no country list; by Matt's decision they join the Country specific list of the country JustWatch says made them (all US, positions 11–15). |
+| `source/Holiday-Film-Trailers.csv` | Earlier per-film trailer list; superseded by the all-entries file and kept for reference. |
 | `source/*.docx` | The two guides as documents, including their methods and limits. Read the rating and ranking caveats. |
 | `source/archive/…_2026-11-24_no-ratings.docx` | Earlier 24 Nov edition of guide 1, without US ratings. Replaced by `source/Christmas-Holiday-Film-Watch-Guide-US.docx`; kept for reference only. |
 
@@ -38,6 +39,7 @@ There is no separate "global" file. Each guide ends with a **Global Top Ten** se
   - The globe pauses rendering while a panel is open.
   - GSAP 3.15.0 and ScrollTrigger via jsDelivr, with `gsap.ticker.lagSmoothing(0)`.
 - **Title pill (top-left):** "Watching Christmas" in **Cherry Swash Bold**, red, **no white outline**, **no tree**, plus a chip showing the current mode. Clicking it reopens the welcome card. **Nothing at the top right**; the location display was removed on purpose.
+- **Globe hover (Matt, 26 Nov 2026):** a country with films turns **Christmas green `#00873E`** (`--xmas-green`, `COL.hasHover`); no-data countries keep their subtle dark hover.
 - **Map key:** a **"?" button** at the bottom right. Hover or focus shows the key, a click pins it, and it's hidden otherwise. Its wording follows the mode.
 - **Welcome card:** shows on **every visit** (Matt, 26 Nov 2026; it used to show on the first visit only). It contains:
   - the title in Cherry Swash red with a drop shadow and no outline;
@@ -110,9 +112,9 @@ There is no separate "global" file. Each guide ends with a **Global Top Ten** se
 ```
 python3 -I scripts/fetch_justwatch_offers.py scripts/justwatch_offers.json --from-csv source/Holiday-Films-US-Ratings.csv source/Holiday-Films-by-Country-of-Origin.csv
 python3 -I scripts/find_justwatch_slugs.py source/Holiday-Films-by-Country-of-Origin.csv scripts/justwatch_offers.json scripts/justwatch_slug_matches.json
-python3 -I scripts/build_markets.py scripts/justwatch_offers.json site source/Holiday-Films-US-Ratings.csv source/Holiday-Films-by-Country-of-Origin.csv source/Holiday-Film-Trailers.csv
+python3 -I scripts/build_markets.py scripts/justwatch_offers.json site source/Holiday-Films-US-Ratings.csv source/Holiday-Films-by-Country-of-Origin.csv source/Holiday-Films-All-Country-Entries-With-Trailers.csv
 python3 -I scripts/fetch_posters.py scripts/posters_manifest.json site/posters
-python3 -I scripts/build_markets.py scripts/justwatch_offers.json site source/Holiday-Films-US-Ratings.csv source/Holiday-Films-by-Country-of-Origin.csv source/Holiday-Film-Trailers.csv
+python3 -I scripts/build_markets.py scripts/justwatch_offers.json site source/Holiday-Films-US-Ratings.csv source/Holiday-Films-by-Country-of-Origin.csv source/Holiday-Films-All-Country-Entries-With-Trailers.csv
 ```
 Playwright in the cloud container must launch Chromium with `proxy: { server: process.env.HTTPS_PROXY, bypass: 'localhost,127.0.0.1' }`, or the CDN scripts never load. A WebGL screenshot takes about 20 s there.
 

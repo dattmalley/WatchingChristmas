@@ -6192,5 +6192,377 @@
    }
   ],
   "image": "https://images.justwatch.com/poster/291392573/s718/six-degrees-of-celebration.jpg"
+ },
+ "a-christmas-carol-2009": {
+  "origin": "United States",
+  "offers": [
+   {
+    "name": "Amazon Prime Video",
+    "url": "https://watch.amazon.com/detail?gti=amzn1.dv.gti.18f4b8a1-26c0-455f-90b9-9227d2af3275",
+    "fn": "ProvideService",
+    "price": 8.99
+   },
+   {
+    "name": "Amazon Prime Video with Ads",
+    "url": "https://watch.amazon.com/detail?gti=amzn1.dv.gti.18f4b8a1-26c0-455f-90b9-9227d2af3275",
+    "fn": "ProvideService",
+    "price": 8.99
+   },
+   {
+    "name": "Disney Plus",
+    "url": "https://www.disneyplus.com/browse/entity-8f498e51-90de-4f5d-8cb9-5b4dd4de81dc",
+    "fn": "ProvideService",
+    "price": 12.49
+   },
+   {
+    "name": "Amazon Video",
+    "url": "https://watch.amazon.com/detail?gti=amzn1.dv.gti.eea9f67f-6a9c-9d1b-82eb-656d033a91e0",
+    "fn": "LeaseOut",
+    "price": 3.99
+   },
+   {
+    "name": "Apple TV Store",
+    "url": "https://tv.apple.com/us/movie/a-christmas-carol/umc.cmc.eig39fvss9v0h4zxcj38rc7m?at=1000l3V2&ct=app_tv&itscg=30200&itsct=justwatch_tv&playableId=tvs.sbd.9001%3A383304202",
+    "fn": "LeaseOut",
+    "price": 3.99
+   },
+   {
+    "name": "Fandango At Home",
+    "url": "https://athome.fandango.com/content/browse/details/A-Christmas-Carol/169632",
+    "fn": "LeaseOut",
+    "price": 3.99
+   },
+   {
+    "name": "Amazon Video",
+    "url": "https://watch.amazon.com/detail?gti=amzn1.dv.gti.eea9f67f-6a9c-9d1b-82eb-656d033a91e0",
+    "fn": "Sell",
+    "price": 9.99
+   },
+   {
+    "name": "Apple TV Store",
+    "url": "https://tv.apple.com/us/movie/a-christmas-carol/umc.cmc.eig39fvss9v0h4zxcj38rc7m?at=1000l3V2&ct=app_tv&itscg=30200&itsct=justwatch_tv&playableId=tvs.sbd.9001%3A383304202",
+    "fn": "Sell",
+    "price": 9.99
+   },
+   {
+    "name": "Fandango At Home",
+    "url": "https://athome.fandango.com/content/browse/details/A-Christmas-Carol/169632",
+    "fn": "Sell",
+    "price": 17.98
+   }
+  ],
+  "image": "https://images.justwatch.com/poster/310495504/s718/a-christmas-carol-2009.jpg"
+ },
+ "candy-cane-lane": {
+  "origin": "United States",
+  "offers": [
+   {
+    "name": "Amazon Prime Video",
+    "url": "https://watch.amazon.com/detail?gti=amzn1.dv.gti.6931377f-9540-4884-baa2-bb55510e1654",
+    "fn": "ProvideService",
+    "price": 8.99
+   },
+   {
+    "name": "Amazon Prime Video with Ads",
+    "url": "https://watch.amazon.com/detail?gti=amzn1.dv.gti.6931377f-9540-4884-baa2-bb55510e1654",
+    "fn": "ProvideService",
+    "price": 8.99
+   },
+   {
+    "name": "TNT",
+    "url": "https://www.tntdrama.com/movies/candy-cane-lane-2023-theatrical",
+    "fn": "ProvideService",
+    "price": null
+   },
+   {
+    "name": "TBS",
+    "url": "https://www.tbs.com/movies/candy-cane-lane-2023-theatrical",
+    "fn": "ProvideService",
+    "price": null
+   },
+   {
+    "name": "tru TV",
+    "url": "https://www.trutv.com/movies/candy-cane-lane-2023-theatrical",
+    "fn": "ProvideService",
+    "price": null
+   },
+   {
+    "name": "Amazon Prime Video Free with Ads",
+    "url": "https://watch.amazon.com/detail?gti=amzn1.dv.gti.2c28f1d0-45dd-4f39-be36-1e0f9ab5a9ba",
+    "fn": "ProvideService",
+    "price": null
+   },
+   {
+    "name": "Amazon MX Player",
+    "url": "https://watch.amazon.com/detail?gti=amzn1.dv.gti.2c28f1d0-45dd-4f39-be36-1e0f9ab5a9ba",
+    "fn": "ProvideService",
+    "price": null
+   },
+   {
+    "name": "Apple TV Store",
+    "url": "https://tv.apple.com/us/movie/candy-cane-lane/umc.cmc.3qbidm7w7bf8t3g83xs5tw2y4?at=1000l3V2&ct=app_tv&itscg=30200&itsct=justwatch_tv&playableId=tvs.sbd.9001%3A1720050793",
+    "fn": "Sell",
+    "price": 4.99
+   },
+   {
+    "name": "Amazon Video",
+    "url": "https://watch.amazon.com/detail?gti=amzn1.dv.gti.2c28f1d0-45dd-4f39-be36-1e0f9ab5a9ba",
+    "fn": "Sell",
+    "price": 5
+   },
+   {
+    "name": "Fandango At Home",
+    "url": "https://athome.fandango.com/content/browse/details/Candy-Cane-Lane/2909512",
+    "fn": "Sell",
+    "price": 5
+   }
+  ],
+  "image": "https://images.justwatch.com/poster/309328561/s718/candy-cane-lane.jpg"
+ },
+ "love-the-coopers": {
+  "origin": "United States",
+  "offers": [
+   {
+    "name": "Netflix Standard with Ads",
+    "url": "https://www.netflix.com/title/80057299",
+    "fn": "ProvideService",
+    "price": 8.99
+   },
+   {
+    "name": "Netflix",
+    "url": "https://www.netflix.com/title/80057299",
+    "fn": "ProvideService",
+    "price": 19.98
+   },
+   {
+    "name": "Lionsgate+ Amazon Channel",
+    "url": "https://watch.amazon.com/detail?gti=amzn1.dv.gti.d4b85323-5647-4a44-4d74-08066b5c8d6a",
+    "fn": "ProvideService",
+    "price": 1.75
+   },
+   {
+    "name": "Plex Live TV",
+    "url": "https://watch.plex.tv/live-tv/channel/hersphere-by-lionsgate?autoplay=1&utm_content=644c4bc17472b186783f35a0&utm_medium=deeplink&utm_source=justWatch-linear-catalog",
+    "fn": "ProvideService",
+    "price": null
+   },
+   {
+    "name": "Sling Freestream Live",
+    "url": "https://watch.sling.com/1/program/23580506e92dd753a5d453ec2b843ad5/watch",
+    "fn": "ProvideService",
+    "price": null
+   },
+   {
+    "name": "Amazon Video",
+    "url": "https://watch.amazon.com/detail?gti=amzn1.dv.gti.d4b85323-5647-4a44-4d74-08066b5c8d6a",
+    "fn": "LeaseOut",
+    "price": 3.99
+   },
+   {
+    "name": "Apple TV Store",
+    "url": "https://tv.apple.com/us/movie/love-the-coopers/umc.cmc.79kw8kj625dj1t9f455yg85ae?at=1000l3V2&ct=app_tv&itscg=30200&itsct=justwatch_tv&playableId=tvs.sbd.9001%3A1054114989",
+    "fn": "LeaseOut",
+    "price": 3.99
+   },
+   {
+    "name": "Fandango At Home",
+    "url": "https://athome.fandango.com/content/browse/details/Love-the-Coopers/730501",
+    "fn": "LeaseOut",
+    "price": 3.99
+   },
+   {
+    "name": "Apple TV Store",
+    "url": "https://tv.apple.com/us/movie/love-the-coopers/umc.cmc.79kw8kj625dj1t9f455yg85ae?at=1000l3V2&ct=app_tv&itscg=30200&itsct=justwatch_tv&playableId=tvs.sbd.9001%3A1054114989",
+    "fn": "Sell",
+    "price": 4.99
+   },
+   {
+    "name": "Fandango At Home",
+    "url": "https://athome.fandango.com/content/browse/details/Love-the-Coopers/730501",
+    "fn": "Sell",
+    "price": 5
+   },
+   {
+    "name": "Amazon Video",
+    "url": "https://watch.amazon.com/detail?gti=amzn1.dv.gti.d4b85323-5647-4a44-4d74-08066b5c8d6a",
+    "fn": "Sell",
+    "price": 14.99
+   }
+  ],
+  "image": "https://images.justwatch.com/poster/193215288/s718/love-the-coopers.jpg"
+ },
+ "scrooged": {
+  "origin": "United States",
+  "offers": [
+   {
+    "name": "Amazon Prime Video",
+    "url": "https://watch.amazon.com/detail?gti=amzn1.dv.gti.81c22e50-8ab5-4947-95c4-3b7a7114f5d6",
+    "fn": "ProvideService",
+    "price": 8.99
+   },
+   {
+    "name": "Paramount+ Amazon Channel",
+    "url": "https://watch.amazon.com/detail?gti=amzn1.dv.gti.81c22e50-8ab5-4947-95c4-3b7a7114f5d6",
+    "fn": "ProvideService",
+    "price": 2.99
+   },
+   {
+    "name": "Amazon Prime Video with Ads",
+    "url": "https://watch.amazon.com/detail?gti=amzn1.dv.gti.81c22e50-8ab5-4947-95c4-3b7a7114f5d6",
+    "fn": "ProvideService",
+    "price": 8.99
+   },
+   {
+    "name": "Paramount Plus Premium",
+    "url": "https://www.paramountplus.com/movies/scrooged/t_Qos1uW__kMIQv3ISrYzLo_uSjkTu8T?searchReferral=publisher&source=search-feeds",
+    "fn": "ProvideService",
+    "price": 13.99
+   },
+   {
+    "name": "Paramount Plus Essential",
+    "url": "https://www.paramountplus.com/movies/scrooged/t_Qos1uW__kMIQv3ISrYzLo_uSjkTu8T?searchReferral=publisher&source=search-feeds",
+    "fn": "ProvideService",
+    "price": 8.99
+   },
+   {
+    "name": "YouTube Free",
+    "url": "https://www.youtube.com/watch?v=lqMufYEGCf8",
+    "fn": "ProvideService",
+    "price": null
+   },
+   {
+    "name": "Amazon Video",
+    "url": "https://watch.amazon.com/detail?gti=amzn1.dv.gti.81c22e50-8ab5-4947-95c4-3b7a7114f5d6",
+    "fn": "LeaseOut",
+    "price": 3.99
+   },
+   {
+    "name": "Apple TV Store",
+    "url": "https://tv.apple.com/us/movie/scrooged/umc.cmc.7j8xida5di6crnh31t66k8z3y?at=1000l3V2&ct=app_tv&itscg=30200&itsct=justwatch_tv&playableId=tvs.sbd.9001%3A305271659",
+    "fn": "LeaseOut",
+    "price": 3.99
+   },
+   {
+    "name": "JustWatch TV Store",
+    "url": "https://tv.justwatch.com/view/film/225025",
+    "fn": "LeaseOut",
+    "price": 3.99
+   },
+   {
+    "name": "Fandango At Home",
+    "url": "https://athome.fandango.com/content/browse/details/Scrooged/14735",
+    "fn": "LeaseOut",
+    "price": 3.99
+   },
+   {
+    "name": "Plex",
+    "url": "https://watch.plex.tv/movie/scrooged-1988?utm_content=5d7768333c3c2a001fbcdc82&utm_medium=deeplink&utm_source=justWatch-v2-catalog",
+    "fn": "LeaseOut",
+    "price": 3.99
+   },
+   {
+    "name": "Amazon Video",
+    "url": "https://watch.amazon.com/detail?gti=amzn1.dv.gti.81c22e50-8ab5-4947-95c4-3b7a7114f5d6",
+    "fn": "Sell",
+    "price": 9.99
+   },
+   {
+    "name": "Apple TV Store",
+    "url": "https://tv.apple.com/us/movie/scrooged/umc.cmc.7j8xida5di6crnh31t66k8z3y?at=1000l3V2&ct=app_tv&itscg=30200&itsct=justwatch_tv&playableId=tvs.sbd.9001%3A305271659",
+    "fn": "Sell",
+    "price": 9.99
+   },
+   {
+    "name": "Fandango At Home",
+    "url": "https://athome.fandango.com/content/browse/details/Scrooged/14735",
+    "fn": "Sell",
+    "price": 9.99
+   }
+  ],
+  "image": "https://images.justwatch.com/poster/57711426/s718/scrooged.jpg"
+ },
+ "miracle-on-34th-street-1994": {
+  "origin": "United States",
+  "offers": [
+   {
+    "name": "Hulu",
+    "url": "https://www.hulu.com/watch/a1bab185-9b77-44d8-9572-d601917de732",
+    "fn": "ProvideService",
+    "price": 12.49
+   },
+   {
+    "name": "TNT",
+    "url": "https://www.tntdrama.com/movies/miracle-on-34th-street",
+    "fn": "ProvideService",
+    "price": null
+   },
+   {
+    "name": "TBS",
+    "url": "https://www.tbs.com/movies/miracle-on-34th-street",
+    "fn": "ProvideService",
+    "price": null
+   },
+   {
+    "name": "tru TV",
+    "url": "https://www.trutv.com/movies/miracle-on-34th-street",
+    "fn": "ProvideService",
+    "price": null
+   },
+   {
+    "name": "Howdy Amazon Channel",
+    "url": "https://watch.amazon.com/detail?gti=amzn1.dv.gti.ef02012a-37fa-4860-a31f-8f5015b33b61",
+    "fn": "ProvideService",
+    "price": 0.99
+   },
+   {
+    "name": "Pluto TV Live",
+    "url": "https://pluto.tv/en/live-tv/63335df531a7590007c226b9/details/63335df531a7590007c226b9",
+    "fn": "ProvideService",
+    "price": null
+   },
+   {
+    "name": "BYUtv Live",
+    "url": "https://www.byutv.org/697a8fcd-3722-4d5b-a2bc-74dcd00ad2e9/miracle-on-34th-street",
+    "fn": "ProvideService",
+    "price": null
+   },
+   {
+    "name": "Amazon Video",
+    "url": "https://watch.amazon.com/detail?gti=amzn1.dv.gti.ef02012a-37fa-4860-a31f-8f5015b33b61",
+    "fn": "LeaseOut",
+    "price": 3.99
+   },
+   {
+    "name": "Apple TV Store",
+    "url": "https://tv.apple.com/us/movie/miracle-on-34th-street/umc.cmc.4jnu36y6m50387i78zpvqo2eb?at=1000l3V2&ct=app_tv&itscg=30200&itsct=justwatch_tv&playableId=tvs.sbd.9001%3A270285370",
+    "fn": "LeaseOut",
+    "price": 3.99
+   },
+   {
+    "name": "Fandango At Home",
+    "url": "https://athome.fandango.com/content/browse/details/Miracle-on-34th-Street/7743",
+    "fn": "LeaseOut",
+    "price": 3.99
+   },
+   {
+    "name": "Apple TV Store",
+    "url": "https://tv.apple.com/us/movie/miracle-on-34th-street/umc.cmc.4jnu36y6m50387i78zpvqo2eb?at=1000l3V2&ct=app_tv&itscg=30200&itsct=justwatch_tv&playableId=tvs.sbd.9001%3A270285370",
+    "fn": "Sell",
+    "price": 4.99
+   },
+   {
+    "name": "Amazon Video",
+    "url": "https://watch.amazon.com/detail?gti=amzn1.dv.gti.ef02012a-37fa-4860-a31f-8f5015b33b61",
+    "fn": "Sell",
+    "price": 14.99
+   },
+   {
+    "name": "Fandango At Home",
+    "url": "https://athome.fandango.com/content/browse/details/Miracle-on-34th-Street/7743",
+    "fn": "Sell",
+    "price": 14.99
+   }
+  ],
+  "image": "https://images.justwatch.com/poster/180263360/s718/miracle-on-34th-street-1994.jpg"
  }
 }
