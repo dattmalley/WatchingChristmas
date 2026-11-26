@@ -19,6 +19,9 @@ The owner is Matt; call him Matt. State your understanding before you start, ask
 | `source/Holiday-Films-US-Ratings.csv` | **Guide 1**: what each country watches most. 942 rows, 96 `audience_market` values, US ratings, US watch options. |
 | `source/Holiday-Films-by-Country-of-Origin.csv` | **Guide 2**: films made in each country. 138 rows, 42 `country` sections, local ratings, subscription, free, rental and purchase services. |
 | `source/*.docx` | The two guides as documents, including their methods and limits. Read the rating and ranking caveats. |
+| `source/archive/…_2026-11-24_no-ratings.docx` | Earlier 24 Nov edition of guide 1, without US ratings. Replaced by `source/Christmas-Holiday-Film-Watch-Guide-US.docx`; kept for reference only. |
+
+There is no separate "global" file. Each guide ends with a **Global Top Ten** section, and guide 1's CSV includes it as `audience_market = "Global Top Ten"`.
 
 **Live preview (a private Claude artifact):** https://claude.ai/artifact/YDyQ8vY9pPVCXk4G5BkaUZ. To update it from a Claude session, read it first (`Artifact` `action: "read"`) and then publish to that `url`; don't create a new artifact. The repository is the source of truth, so keep the two in sync.
 
