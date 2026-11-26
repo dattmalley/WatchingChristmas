@@ -1,6 +1,6 @@
-# Christmas Watchlist: build instructions for Claude
+# Watching Christmas: build instructions for Claude
 
-You are continuing **Christmas Watchlist**, an interactive WebGL globe of the Christmas films each country watches or makes. A previous session built and tested a complete **United Kingdom** version. Your job is to **finish it for every country that has data**, without changing the design or behaviour already agreed.
+You are continuing **Watching Christmas**, an interactive WebGL globe of the Christmas films each country watches or makes. A previous session built and tested a complete **United Kingdom** version. Your job is to **finish it for every country that has data**, without changing the design or behaviour already agreed.
 
 The owner is Matt; call him Matt. State your understanding before you start, ask before assuming anything not written here, and give a token-cost estimate before heavy work.
 
@@ -35,7 +35,7 @@ There is no separate "global" file. Each guide ends with a **Global Top Ten** se
   - Snow (canvas), string lights (SVG) and a night-maroon background.
   - The globe pauses rendering while a panel is open.
   - GSAP 3.15.0 and ScrollTrigger via jsDelivr, with `gsap.ticker.lagSmoothing(0)`.
-- **Title pill (top-left):** "Christmas Watchlist" in **Cherry Swash Bold**, red, **no white outline**, **no tree**, plus a chip showing the current mode. Clicking it reopens the welcome card. **Nothing at the top right**; the location display was removed on purpose.
+- **Title pill (top-left):** "Watching Christmas" in **Cherry Swash Bold**, red, **no white outline**, **no tree**, plus a chip showing the current mode. Clicking it reopens the welcome card. **Nothing at the top right**; the location display was removed on purpose.
 - **Map key:** a **"?" button** at the bottom right. Hover or focus shows the key, a click pins it, and it's hidden otherwise. Its wording follows the mode.
 - **Welcome card:** shows on **first visit only** (localStorage `cw-welcomed`, wrapped in try/catch). It contains:
   - the title in Cherry Swash red with a drop shadow and no outline;

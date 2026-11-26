@@ -1,6 +1,6 @@
 # WatchingChristmas
 
-**Christmas Watchlist** is an interactive WebGL globe of the Christmas films each country watches most, or makes itself. Each film is rated and linked straight to where it streams.
+**Watching Christmas** is an interactive WebGL globe of the Christmas films each country watches most, or makes itself. Each film is rated and linked straight to where it streams.
 
 The United Kingdom is complete in this version. The plan for finishing every other country is in [`CLAUDE.md`](CLAUDE.md).
 
