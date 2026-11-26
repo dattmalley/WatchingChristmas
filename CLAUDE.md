@@ -37,11 +37,11 @@ There is no separate "global" file. Each guide ends with a **Global Top Ten** se
   - GSAP 3.15.0 and ScrollTrigger via jsDelivr, with `gsap.ticker.lagSmoothing(0)`.
 - **Title pill (top-left):** "Watching Christmas" in **Cherry Swash Bold**, red, **no white outline**, **no tree**, plus a chip showing the current mode. Clicking it reopens the welcome card. **Nothing at the top right**; the location display was removed on purpose.
 - **Map key:** a **"?" button** at the bottom right. Hover or focus shows the key, a click pins it, and it's hidden otherwise. Its wording follows the mode.
-- **Welcome card:** shows on **first visit only** (localStorage `cw-welcomed`, wrapped in try/catch). It contains:
+- **Welcome card:** shows on **every visit** (Matt, 26 Nov 2026; it used to show on the first visit only). It contains:
   - the title in Cherry Swash red with a drop shadow and no outline;
   - the line "Spin the globe and tap a country to see the Christmas films it watches most, ranked, rated and linked straight to the stream.";
   - the toggle **US movies | Country specific** with one line of help;
-  - one CTA, "Open <detected country>" (for example "Open France"), which flies to that country and opens its panel, or the Santa card if it has no data in the current mode.
+  - two CTAs: **"Open <detected country>"** (for example "Open France"), which flies to that country and opens its panel, or the Santa card if it has no data in the current mode; and **"Explore the globe"**, which closes the card so the visitor can spin the globe themselves.
   The country is guessed from the time zone, then the browser language, falling back to the United Kingdom. The artifact host blocks the geolocation API, so there's no permission prompt. (This replaced the earlier "Open United Kingdom" and "Spin to my country" buttons; see section 4.)
 - **Toggle meaning (decided by Matt, don't change it):**
   - **US movies:** the clicked country's guide-1 most-watched list, keeping only films with **United States among their producing countries** (co-productions count). Numbers are that country's ranks. The filter uses US ratings: All, G, PG, PG-13, R, TV, Unverified. Each row shows the index score.
@@ -101,7 +101,7 @@ There is no separate "global" file. Each guide ends with a **Global Top Ten** se
 - Guadeloupe, Martinique, Réunion: clickable **map markers**. Hong Kong, Taiwan and New Caledonia use their own shapes.
 - "Soviet Union": merged into **Russia**'s Country specific list, each film labelled "(Soviet-era film)".
 - Origin: guide 2 by normalised title + year (or watch URL), else JustWatch `countryOfOrigin`, flagged. Films with neither are left out of US movies mode.
-- Welcome card: one CTA, **"Open <detected country>"** (time zone, then browser language; falls back to the UK). "Spin to my country" was removed.
+- Welcome card: shows on every visit, with **"Open <detected country>"** (time zone, then browser language; falls back to the UK) and **"Explore the globe"**. "Spin to my country" was removed.
 - No data in the current mode (clicking a shape or marker, or toggling inside a panel): the **Santa card** opens, with a button to the other mode when that has films.
 
 ## Build commands

@@ -310,6 +310,10 @@ header.bar {
       <svg width="16" height="16" viewBox="0 0 24 24" aria-hidden="true"><path d="M8 5v14l11-7z" fill="currentColor"/></svg>
       <span id="openMineLbl">Open United Kingdom</span>
     </button>
+    <button class="btn btn-ghost" id="explore" type="button">
+      <svg width="16" height="16" viewBox="0 0 24 24" aria-hidden="true"><circle cx="12" cy="12" r="9" fill="none" stroke="currentColor" stroke-width="2"/><path d="M3 12h18M12 3c2.6 2.6 3.8 5.6 3.8 9s-1.2 6.4-3.8 9c-2.6-2.6-3.8-5.6-3.8-9S9.4 5.6 12 3z" fill="none" stroke="currentColor" stroke-width="1.6"/></svg>
+      Explore the globe
+    </button>
   </div>
 </section>
 
@@ -585,12 +589,12 @@ function openWelcome() {
   $("#openMine").focus();
 }
 function closeWelcome(then) {
-  store.set("cw-welcomed", "1");
   const done = () => { $("#welcome").hidden = true; $("#wScrim").hidden = true; gsap.set("#welcome", { clearProps: "all" }); then ? then() : (lastFocus && lastFocus.focus && lastFocus.focus()); };
   if (reduceMotion) return done();
   gsap.timeline({ onComplete: done }).to("#welcome", { y: 30, opacity: 0, duration: .25, ease: "power2.in" }).to("#wScrim", { opacity: 0, duration: .2 }, "<.05");
 }
 $("#wClose").addEventListener("click", () => closeWelcome());
+$("#explore").addEventListener("click", () => closeWelcome(() => { if (globe) globe.controls().autoRotate = !reduceMotion; }));
 $("#wScrim").addEventListener("click", () => closeWelcome());
 $("#home").addEventListener("click", () => {
   if (!$("#modal").hidden) closeModal();
@@ -857,7 +861,7 @@ function startSnow() {
 
 /* ===== Boot ===== */
 drawLights(); startSnow(); setMode(mode, { rerender: false });
-if (!store.get("cw-welcomed")) openWelcome();
+openWelcome();                             // every visit: choose "Open <your country>" or "Explore the globe"
 Promise.all([fetch("data/countries.json").then(r => r.json()), fetch("data/markets.json").then(r => r.json())])
   .then(([geo, markets]) => { MARKETS = markets; initGlobe(geo); repaint(); setMyCountry(); })
   .catch(() => showToast("The globe could not load. Refresh the page to try again."));
