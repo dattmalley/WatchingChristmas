@@ -40,7 +40,7 @@ FEAT={f['properties']['iso']:f['properties'] for f in geo['features']}
 EXTRA_POS={'GP':(16.25,-61.58),'MQ':(14.64,-61.02),'RE':(-21.12,55.53),'GLOBAL':(20,0)}
 SHORT={'United Kingdom':'UK','United States':'US','United Arab Emirates':'UAE','Global Top Ten':'global','Czech Republic':'Czech Republic'}
 THE={'United Kingdom','United States','United Arab Emirates','Netherlands','Philippines','Czech Republic','Dominican Republic','Bahamas','Maldives','Global Top Ten'}
-DISPLAY={'Czech Republic':'Czechia'}   # one name per shape; guide 1 says Czech Republic, guide 2 Czechia
+DISPLAY={'Czech Republic':'Czechia','Global Top Ten':'Global Top 10'}   # 'Global Top 10' matches the app's buttons (Matt)   # one name per shape; guide 1 says Czech Republic, guide 2 Czechia
 
 def norm(t):
   t=unicodedata.normalize('NFKD',t).encode('ascii','ignore').decode().lower().replace('&','and')
