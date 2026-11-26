@@ -1,6 +1,6 @@
 # Builds site/data/markets.json for every country with data and sets the per-mode globe status in site/data/countries.json.
 # Usage:
-#   python3 -I scripts/build_markets.py scripts/justwatch_offers.json site source/Holiday-Films-US-Ratings.csv source/Holiday-Films-by-Country-of-Origin.csv
+#   python3 -I scripts/build_markets.py scripts/justwatch_offers.json site source/Holiday-Films-US-Ratings.csv source/Holiday-Films-by-Country-of-Origin.csv [source/Holiday-Film-Trailers.csv]
 # Also writes scripts/posters_manifest.json (poster file -> source image URL) for scripts/fetch_posters.py.
 # Run order: fetch_justwatch_offers.py -> build_markets.py -> fetch_posters.py -> build_markets.py (picks up the downloaded posters).
 #
@@ -13,6 +13,7 @@
 #   - Origin: guide 2 by title (normalised) + year, or by watch URL; else JustWatch countryOfOrigin, flagged.
 import csv,json,sys,re,os,unicodedata,collections
 OFFERS,P,C1,C2=sys.argv[1:5]
+C3=sys.argv[5] if len(sys.argv)>5 else None   # optional trailers CSV (trailer_url per film)
 HERE=os.path.dirname(os.path.abspath(__file__))
 jw=json.load(open(OFFERS))
 g1=list(csv.DictReader(open(C1,encoding='utf-8-sig')))
@@ -143,13 +144,27 @@ def g1_origin(r):
   o={'USA':'United States','US':'United States','United States of America':'United States','UK':'United Kingdom'}.get(o,o)
   return None,([o] if o else []),('justwatch' if o else 'unknown')
 
+report=collections.defaultdict(list)
+# ---------- trailers (Matt's CSV, researched 26 Nov 2026), matched by normalised title + year ----------
+TRAILER={}
+if C3:
+  for r in csv.DictReader(open(C3,encoding='utf-8-sig')):
+    if r['trailer_url'].strip():
+      TRAILER.setdefault((norm(r['title']),r['year']),{'url':r['trailer_url'].strip(),'platform':r['trailer_platform'].strip()})
+trailer_hits=set()
+def trailer(title,year):
+  t=TRAILER.get((norm(title),str(year)))
+  if t: trailer_hits.add((norm(title),str(year)))
+  else: report['no trailer'].append(f'{title} ({year})')
+  return t
+
 def market_shell(name):
   iso=ISO[name]; p=FEAT.get(iso)
   lat,lng=EXTRA_POS.get(iso) or (p['ly'],p['lx'])
   dn=DISPLAY.get(name,name)
   return iso,{'name':dn,'code':SHORT.get(dn,SHORT.get(name,dn)),'the':dn in THE or name in THE,'lat':lat,'lng':lng}
 
-markets={}; report=collections.defaultdict(list)
+markets={}
 # ---------- US movies mode (guide 1) ----------
 rows=collections.defaultdict(list)
 for r in g1:
@@ -166,7 +181,7 @@ for name,rs in rows.items():
       'rating':rating or 'Unverified','usr':r['us_mpa_rating'] or r['us_tv_rating'],'cert':r['rating_certificate'],
       'index':float(r['index']) if r['index'] else None,'origin':origin,'originSrc':osrc,
       'poster':poster(t,r['release_year'],r['poster_or_image_url'],(jwrec(r['us_watch_url']) or {}).get('image')),
-      'jw':jwlink(r['us_watch_url'],t),'watch':{'US':watch(r2,r['us_watch_url'],r['us_watch_options'])}})
+      'trailer':trailer(t,r['release_year']),'jw':jwlink(r['us_watch_url'],t),'watch':{'US':watch(r2,r['us_watch_url'],r['us_watch_options'])}})
   m=markets.setdefault(iso,shell)
   m['us']={'sources':'National + Netflix + JustWatch index','films':films}
   if not films: report['guide-1 market with no US-made films'].append(name)
@@ -204,7 +219,7 @@ for name in sorted(loc,key=lambda n:n=='Soviet Union'):   # Russia's own films f
        'hot':rating!='Unverified' and age(rating)>=15,'authority':a,'usr':r['us_mpa_rating'] or r['us_tv_rating'] or '',
        'origin':origin_list(r['country_of_origin']),'originSrc':'doc','ratingSrc':r['rating_source'],
        'poster':poster(r['title'],r['year'],r['poster_or_image_url'],(jwrec(r['us_watch_url']) or {}).get('image')),
-       'jw':jwlink(r['us_watch_url'],r['title']),'watch':{'US':watch(r,r['us_watch_url'])}}
+       'trailer':trailer(r['title'],r['year']),'jw':jwlink(r['us_watch_url'],r['title']),'watch':{'US':watch(r,r['us_watch_url'])}}
     if name=='Soviet Union': f['era']='Soviet Union'
     L['films'].append(f)
   L['scale']=sorted({f['rating'] for f in L['films'] if f['rating']!='Unverified'},key=lambda x:(age(x),x))

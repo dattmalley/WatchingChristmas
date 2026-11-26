@@ -21,6 +21,7 @@ The owner is Matt; call him Matt. State your understanding before you start, ask
 | `scripts/justwatch_offers.json` | Cached JustWatch offers, origin and poster for every unique film (135 pages). Re-runs only fetch what's missing. |
 | `source/Holiday-Films-US-Ratings.csv` | **Guide 1**: what each country watches most. 942 rows, 96 `audience_market` values, US ratings, US watch options. |
 | `source/Holiday-Films-by-Country-of-Origin.csv` | **Guide 2**: films made in each country. 138 rows, 42 `country` sections, local ratings, subscription, free, rental and purchase services. |
+| `source/Holiday-Film-Trailers.csv` | Matt's trailer list (26 Nov 2026): guide data plus `trailer_url` and `trailer_platform` for all 161 unique films (157 with a trailer). `build_markets.py` matches it by title + year and adds `trailer: {url, platform}` to each film, shown as a **"Watch trailer"** button under the origin line. Films without one show no button. |
 | `source/*.docx` | The two guides as documents, including their methods and limits. Read the rating and ranking caveats. |
 | `source/archive/…_2026-11-24_no-ratings.docx` | Earlier 24 Nov edition of guide 1, without US ratings. Replaced by `source/Christmas-Holiday-Film-Watch-Guide-US.docx`; kept for reference only. |
 
@@ -109,9 +110,9 @@ There is no separate "global" file. Each guide ends with a **Global Top Ten** se
 ```
 python3 -I scripts/fetch_justwatch_offers.py scripts/justwatch_offers.json --from-csv source/Holiday-Films-US-Ratings.csv source/Holiday-Films-by-Country-of-Origin.csv
 python3 -I scripts/find_justwatch_slugs.py source/Holiday-Films-by-Country-of-Origin.csv scripts/justwatch_offers.json scripts/justwatch_slug_matches.json
-python3 -I scripts/build_markets.py scripts/justwatch_offers.json site source/Holiday-Films-US-Ratings.csv source/Holiday-Films-by-Country-of-Origin.csv
+python3 -I scripts/build_markets.py scripts/justwatch_offers.json site source/Holiday-Films-US-Ratings.csv source/Holiday-Films-by-Country-of-Origin.csv source/Holiday-Film-Trailers.csv
 python3 -I scripts/fetch_posters.py scripts/posters_manifest.json site/posters
-python3 -I scripts/build_markets.py scripts/justwatch_offers.json site source/Holiday-Films-US-Ratings.csv source/Holiday-Films-by-Country-of-Origin.csv
+python3 -I scripts/build_markets.py scripts/justwatch_offers.json site source/Holiday-Films-US-Ratings.csv source/Holiday-Films-by-Country-of-Origin.csv source/Holiday-Film-Trailers.csv
 ```
 Playwright in the cloud container must launch Chromium with `proxy: { server: process.env.HTTPS_PROXY, bypass: 'localhost,127.0.0.1' }`, or the CDN scripts never load. A WebGL screenshot takes about 20 s there.
 

@@ -201,6 +201,15 @@ header.bar {
 .rating.hot { border-color: var(--holly); color: var(--holly); }
 .rating.us { border-style: dashed; border-color: #A99597; color: var(--muted); font-weight: 600; }
 .origin { font-size: 11.5px; color: var(--muted); }
+/* "Watch trailer": outlined holly pill under the origin line; hover and keyboard focus fill it */
+.trailer {
+  display: inline-flex; align-items: center; gap: 7px; margin-top: 9px; padding: 5px 12px 5px 6px; border-radius: 999px;
+  font: 600 12.5px/1.2 var(--body); color: var(--holly); text-decoration: none; background: #fff;
+  box-shadow: inset 0 0 0 1.5px var(--holly); transition: background .2s, color .2s;
+}
+.trailer .play { width: 20px; height: 20px; border-radius: 50%; display: grid; place-items: center; background: var(--holly); color: #fff; flex: none; transition: background .2s, color .2s; }
+.trailer:hover, .trailer:focus-visible { background: var(--holly); color: #fff; outline: none; }
+.trailer:hover .play, .trailer:focus-visible .play { background: #fff; color: var(--holly); }
 .runtime { grid-area: r; font: 700 22px var(--title); color: var(--ink); white-space: nowrap; font-variant-numeric: tabular-nums; text-align: right; }
 .runtime small { display: block; font: 500 11px var(--body); color: var(--muted); letter-spacing: .04em; text-transform: uppercase; }
 
@@ -671,6 +680,11 @@ function originText(f) {
   return f.era ? `${t} (Soviet-era film)` : t;
 }
 const the = m => (m.the ? "the " : "");
+function trailerHTML(f) {
+  if (!f.trailer || !f.trailer.url) return "";                     // 4 films have no trailer in the trailers CSV
+  const where = f.trailer.platform && f.trailer.platform !== "YouTube" ? ` on ${f.trailer.platform}` : " on YouTube";
+  return `<a class="trailer" href="${esc(f.trailer.url)}" target="_blank" rel="noopener" title="Opens${esc(where)} in a new tab" aria-label="Watch the trailer for ${esc(f.title)}${esc(where)}"><span class="play"><svg width="8" height="8" viewBox="0 0 24 24" aria-hidden="true"><path d="M7 4v16l13-8z" fill="currentColor"/></svg></span>Watch trailer</a>`;
+}
 function filmHTML(f) {
   const auth = f.authority || list().authority;
   const ratingChips = mode === "us"
@@ -686,6 +700,7 @@ function filmHTML(f) {
       <h3>${esc(f.title)}</h3>
       <div class="meta">${ratingChips}<span>${f.year}</span>${extra}</div>
       <div class="meta origin">${esc(originText(f))}${f.originSrc === "justwatch" ? " (origin per JustWatch)" : ""}</div>
+      ${trailerHTML(f)}
     </div>
     <div class="runtime">${hm(f.min)}<small>${f.min} min</small></div>
     <div class="watch">${watchHTML(f)}</div>
