@@ -1,4 +1,4 @@
-<title>Christmas Watchlist</title>
+<title>Watching Christmas</title>
 <meta charset="utf-8">
 <meta name="claude:viewport-fit-sides" content="cover">
 <link rel="preconnect" href="https://fonts.googleapis.com">
@@ -90,6 +90,25 @@ header.bar {
 .key-panel span { display: flex; align-items: center; gap: 8px; }
 .key-panel i { width: 12px; height: 12px; border-radius: 4px; display: inline-block; flex: none; }
 
+/* ---------- Global Top 10 (bottom-left, mirrors the "?" key) ---------- */
+.global-btn {
+  position: fixed; z-index: 5; left: max(16px, env(safe-area-inset-left, 0px)); bottom: calc(env(safe-area-inset-bottom, 0px) + 22px);
+  height: 44px; padding: 0 18px 0 12px; gap: 8px; color: var(--holly); font-weight: 700; font-size: 14px;
+}
+.global-btn svg { flex: none; }
+.global-btn:hover { background: #fff; }
+
+/* ---------- territory markers (islands with no shape of their own) ---------- */
+/* the button is just the dot (centred on the island); the label hangs off it and takes no clicks */
+.pin { pointer-events: auto; cursor: pointer; border: 0; background: none; padding: 7px; position: relative; display: block; }
+.pin i { width: 14px; height: 14px; border-radius: 50%; border: 2px solid var(--snow); box-shadow: 0 0 0 3px rgba(0,0,0,.25), 0 3px 8px rgba(0,0,0,.4); display: block; transition: transform .2s; }
+.pin.has i { background: var(--holly); }
+.pin.none i { background: #3A2326; }
+.pin span { position: absolute; left: 50%; top: calc(100% - 4px); transform: translateX(-50%); pointer-events: none; font: 600 10.5px/1.2 var(--body); color: var(--snow); text-shadow: 0 1px 3px rgba(0,0,0,.9); white-space: nowrap; }
+.pin.up span { top: auto; bottom: calc(100% - 4px); }
+.pin:hover i, .pin:focus-visible i { transform: scale(1.3); }
+.key-panel i.dot { border-radius: 50%; border: 2px solid var(--muted); background: var(--holly); }
+
 .tip { font-family: var(--body); background: var(--snow); color: var(--ink); padding: 8px 12px; border-radius: 12px; font-size: 13px; box-shadow: 0 8px 20px rgba(0,0,0,.3); max-width: 220px; }
 .tip strong { display: block; color: var(--holly); font-size: 14px; }
 
@@ -170,6 +189,7 @@ header.bar {
 }
 .poster { grid-area: p; position: relative; width: 84px; aspect-ratio: 2/3; border-radius: 12px; overflow: hidden; background: var(--sage); max-width: 100%; }
 .poster img { width: 100%; height: 100%; object-fit: cover; display: block; }
+.poster .ph { position: absolute; inset: 0; display: grid; place-items: center; padding: 30px 6px 8px; text-align: center; font: 700 12px/1.1 var(--title); color: var(--pine); background: linear-gradient(160deg, var(--sage), #A9C79A); overflow: hidden; }
 .rank { position: absolute; left: 5px; top: 5px; min-width: 24px; height: 24px; padding: 0 6px; border-radius: 999px; background: var(--holly); color: #fff; font: 700 13px/24px var(--title); text-align: center; box-shadow: 0 2px 6px rgba(0,0,0,.3); }
 .name { grid-area: n; min-width: 0; }
 .name h3 { margin: 0; font: 700 23px/1.08 var(--title); color: var(--pine); letter-spacing: .005em; text-wrap: balance; }
@@ -199,6 +219,23 @@ header.bar {
 .modal-foot { padding: 12px 28px 16px; font-size: 11.5px; color: rgba(255,244,241,.8); background: var(--holly-deep); display: flex; gap: 6px 16px; flex-wrap: wrap; justify-content: space-between; }
 .modal-foot a { color: #fff; }
 
+/* ---------- "No data" card (Santa) ---------- */
+.nodata {
+  position: fixed; z-index: 13; left: 50%; top: 50%; transform: translate(-50%,-50%);
+  width: min(400px, calc(100vw - 32px)); max-height: calc(100% - 32px); overflow: hidden auto;
+  background: linear-gradient(170deg, var(--holly) 0%, var(--holly-deep) 100%);
+  border-radius: var(--r-lg); box-shadow: 0 40px 90px rgba(0,0,0,.55), inset 0 0 0 1px rgba(255,255,255,.18);
+  padding: 22px 26px 26px; display: grid; justify-items: center; gap: 10px; text-align: center;
+}
+.nodata .close { position: absolute; right: 18px; top: 18px; }
+.nodata .santa { width: 150px; height: 150px; overflow: visible; margin-top: 4px; }
+.nodata .country { margin: 0; font: 700 28px/1.05 var(--body); letter-spacing: -.01em; text-wrap: balance; padding: 0 40px; }
+.nodata .msg { margin: 0; font: 700 22px/1.1 var(--title); letter-spacing: .02em; color: var(--snow); background: rgba(0,0,0,.16); border-radius: 999px; padding: 6px 16px; }
+.nodata .why { margin: 0; font-size: 13.5px; color: rgba(255,244,241,.85); max-width: 32ch; }
+.nodata .cta-row { justify-content: center; margin-top: 6px; }
+.nodata .btn-snow { background: var(--snow); color: var(--holly); box-shadow: 0 8px 20px rgba(0,0,0,.2); }
+.nodata .btn-snow:hover { background: #fff; }
+
 @media (max-width: 640px) {
   .welcome { padding: 34px 20px 24px; top: auto; bottom: 0; transform: translateX(-50%); border-radius: 28px 28px 0 0; width: 100vw; padding-bottom: calc(env(safe-area-inset-bottom, 0px) + 24px); }
   .welcome p { font-size: 15.5px; }
@@ -220,6 +257,9 @@ header.bar {
   .watch { margin-top: 6px; border-top: 1px dashed #E6D7D4; padding-top: 10px; }
   .modal-foot { padding: 10px 16px calc(env(safe-area-inset-bottom, 0px) + 12px); }
   .key { bottom: calc(env(safe-area-inset-bottom, 0px) + 16px); }
+  .global-btn { bottom: calc(env(safe-area-inset-bottom, 0px) + 16px); }
+  .nodata .santa { width: 128px; height: 128px; }
+  .nodata .country { font-size: 25px; }
 }
 @media (prefers-reduced-motion: reduce) {
   .bulb { animation: none; }
@@ -231,11 +271,16 @@ header.bar {
 <svg class="lights" id="lights" aria-hidden="true" preserveAspectRatio="none"></svg>
 
 <header class="bar">
-  <button class="pill brand" id="home" type="button" aria-label="Christmas Watchlist: open the welcome card">
-    <span class="wordmark">Christmas Watchlist</span>
+  <button class="pill brand" id="home" type="button" aria-label="Watching Christmas: open the welcome card">
+    <span class="wordmark">Watching Christmas</span>
     <span class="mode-chip" id="modeChip">US movies</span>
   </button>
 </header>
+
+<button class="pill global-btn" id="globalBtn" type="button" aria-label="Open the Global Top 10">
+  <svg width="20" height="20" viewBox="0 0 24 24" aria-hidden="true"><circle cx="12" cy="12" r="9" fill="none" stroke="currentColor" stroke-width="2"/><path d="M3 12h18M12 3c2.6 2.6 3.8 5.6 3.8 9s-1.2 6.4-3.8 9c-2.6-2.6-3.8-5.6-3.8-9S9.4 5.6 12 3z" fill="none" stroke="currentColor" stroke-width="1.6"/></svg>
+  Global Top 10
+</button>
 
 <div class="key" id="key">
   <button class="key-btn" id="keyBtn" type="button" aria-expanded="false" aria-controls="keyPanel" aria-label="Map key">?</button>
@@ -250,7 +295,7 @@ header.bar {
   <button class="x" id="wClose" type="button" aria-label="Close and explore the globe">
     <svg width="16" height="16" viewBox="0 0 24 24" aria-hidden="true"><path d="M6 6l12 12M18 6 6 18" stroke="currentColor" stroke-width="2.6" stroke-linecap="round"/></svg>
   </button>
-  <h1 class="wordmark" id="wTitle">Christmas Watchlist</h1>
+  <h1 class="wordmark" id="wTitle">Watching Christmas</h1>
   <p>Spin the globe and tap a country to see the Christmas films it watches most, ranked, rated and linked straight to the stream.</p>
   <div class="mode">
     <span class="mode-label" id="wModeLabel">Show me</span>
@@ -261,12 +306,66 @@ header.bar {
     <div class="mode-help" id="wHelp"></div>
   </div>
   <div class="cta-row">
-    <button class="btn btn-red" id="openUK" type="button">
+    <button class="btn btn-red" id="openMine" type="button">
       <svg width="16" height="16" viewBox="0 0 24 24" aria-hidden="true"><path d="M8 5v14l11-7z" fill="currentColor"/></svg>
-      Open United Kingdom
+      <span id="openMineLbl">Open United Kingdom</span>
     </button>
-    <button class="btn btn-ghost" id="spinMe" type="button">Spin to my country</button>
+    <button class="btn btn-ghost" id="explore" type="button">
+      <svg width="16" height="16" viewBox="0 0 24 24" aria-hidden="true"><circle cx="12" cy="12" r="9" fill="none" stroke="currentColor" stroke-width="2"/><path d="M3 12h18M12 3c2.6 2.6 3.8 5.6 3.8 9s-1.2 6.4-3.8 9c-2.6-2.6-3.8-5.6-3.8-9S9.4 5.6 12 3z" fill="none" stroke="currentColor" stroke-width="1.6"/></svg>
+      Explore the globe
+    </button>
   </div>
+</section>
+
+<!-- "No data" card: an original Santa drawn in SVG -->
+<div class="scrim" id="nScrim" hidden></div>
+<section class="nodata" id="nodata" role="dialog" aria-modal="true" aria-labelledby="nTitle" aria-describedby="nWhy" hidden>
+  <button class="close" id="nClose" type="button" aria-label="Close">
+    <svg width="16" height="16" viewBox="0 0 24 24" aria-hidden="true"><path d="M6 6l12 12M18 6 6 18" stroke="currentColor" stroke-width="2.6" stroke-linecap="round"/></svg>
+  </button>
+  <svg class="santa" id="santa" viewBox="0 0 160 160" role="img" aria-label="Santa Claus waving">
+    <ellipse cx="80" cy="152" rx="46" ry="6" fill="rgba(0,0,0,.18)"/>
+    <g id="sBody">
+      <!-- coat -->
+      <path d="M36 150c0-30 18-50 44-50s44 20 44 50z" fill="#E5302F"/>
+      <path d="M80 100v50" stroke="#FFFCF8" stroke-width="9"/>
+      <rect x="38" y="128" width="84" height="10" rx="2" fill="#2B1A1C"/>
+      <rect x="72" y="125" width="16" height="16" rx="3" fill="none" stroke="#F7C948" stroke-width="3"/>
+      <!-- left arm resting -->
+      <path d="M44 116c-8 8-10 18-8 26" stroke="#E5302F" stroke-width="13" stroke-linecap="round" fill="none"/>
+      <circle cx="36" cy="144" r="7" fill="#21402F"/>
+    </g>
+    <!-- waving right arm -->
+    <g id="sArm" style="transform-origin:116px 112px">
+      <path d="M116 112c10-6 18-18 20-32" stroke="#E5302F" stroke-width="13" stroke-linecap="round" fill="none"/>
+      <rect x="128" y="70" width="17" height="8" rx="4" fill="#FFFCF8" transform="rotate(-12 136 74)"/>
+      <ellipse cx="138" cy="62" rx="8" ry="9.5" fill="#21402F"/>
+      <ellipse cx="130.5" cy="64" rx="3.4" ry="5" fill="#21402F" transform="rotate(-30 130.5 64)"/>
+    </g>
+    <g id="sHead">
+      <!-- beard -->
+      <path d="M50 70c-4 22 8 44 30 46 22-2 34-24 30-46-8 6-18 9-30 9s-22-3-30-9z" fill="#FFFCF8"/>
+      <circle cx="56" cy="96" r="9" fill="#FFFCF8"/><circle cx="104" cy="96" r="9" fill="#FFFCF8"/><circle cx="80" cy="112" r="10" fill="#FFFCF8"/>
+      <!-- face -->
+      <ellipse cx="80" cy="66" rx="24" ry="22" fill="#F6C9A8"/>
+      <circle cx="64" cy="72" r="5.5" fill="#F29A8E" opacity=".7"/><circle cx="96" cy="72" r="5.5" fill="#F29A8E" opacity=".7"/>
+      <path d="M68 62q4-5 8 0M84 62q4-5 8 0" stroke="#2B1A1C" stroke-width="2.6" stroke-linecap="round" fill="none"/>
+      <circle cx="80" cy="71" r="5" fill="#E9A07F"/>
+      <!-- moustache -->
+      <path d="M80 76c-6-4-15-4-19 2 5 4 13 4 19-1 6 5 14 5 19 1-4-6-13-6-19-2z" fill="#FFFCF8" stroke="#E6D7D4" stroke-width="1"/>
+      <path d="M74 85q6 4 12 0" stroke="#9E1A23" stroke-width="2.4" stroke-linecap="round" fill="none"/>
+      <!-- hat -->
+      <path d="M56 50c2-22 18-34 36-32 12 2 22 10 26 22-8-6-16-6-20 0z" fill="#E5302F"/>
+      <rect x="52" y="44" width="56" height="13" rx="6.5" fill="#FFFCF8"/>
+      <circle id="sPom" cx="120" cy="42" r="7.5" fill="#FFFCF8"/>
+    </g>
+    <!-- snowflakes -->
+    <g fill="#FFFCF8" opacity=".85"><circle cx="20" cy="40" r="2.5"/><circle cx="146" cy="24" r="2"/><circle cx="28" cy="90" r="1.8"/><circle cx="14" cy="64" r="1.4"/></g>
+  </svg>
+  <h2 class="country" id="nTitle">Country</h2>
+  <p class="msg">No data for this country</p>
+  <p class="why" id="nWhy"></p>
+  <div class="cta-row" id="nCta"></div>
 </section>
 
 <!-- Film panel -->
@@ -319,7 +418,10 @@ let mode = store.get("cw-mode") === "local" ? "local" : "us";
 let MARKETS = {};
 
 /* ===== Visitor country, no permission prompt: time zone first, then browser language ===== */
-const TZ = { "Europe/London": "GB", "Europe/Belfast": "GB", "Europe/Dublin": "IE", "Europe/Paris": "FR", "Europe/Berlin": "DE", "Europe/Madrid": "ES", "Europe/Rome": "IT", "Europe/Amsterdam": "NL", "Europe/Stockholm": "SE", "Europe/Oslo": "NO", "Europe/Copenhagen": "DK", "Europe/Warsaw": "PL", "Europe/Kyiv": "UA", "Europe/Kiev": "UA", "Asia/Tokyo": "JP", "Asia/Kolkata": "IN", "Asia/Calcutta": "IN", "Australia/Sydney": "AU", "Australia/Melbourne": "AU", "Pacific/Auckland": "NZ", "America/Sao_Paulo": "BR", "America/Mexico_City": "MX", "America/Toronto": "CA", "America/Vancouver": "CA", "America/New_York": "US", "America/Chicago": "US", "America/Denver": "US", "America/Phoenix": "US", "America/Los_Angeles": "US", "America/Anchorage": "US", "Pacific/Honolulu": "US" };
+const TZ = { "Europe/London": "GB", "Europe/Belfast": "GB", "Europe/Dublin": "IE", "Europe/Paris": "FR", "Europe/Berlin": "DE", "Europe/Madrid": "ES", "Europe/Rome": "IT", "Europe/Amsterdam": "NL", "Europe/Stockholm": "SE", "Europe/Oslo": "NO", "Europe/Copenhagen": "DK", "Europe/Warsaw": "PL", "Europe/Kyiv": "UA", "Europe/Kiev": "UA", "Asia/Tokyo": "JP", "Asia/Kolkata": "IN", "Asia/Calcutta": "IN", "Australia/Sydney": "AU", "Australia/Melbourne": "AU", "Australia/Brisbane": "AU", "Australia/Perth": "AU", "Australia/Adelaide": "AU", "Pacific/Auckland": "NZ", "America/Sao_Paulo": "BR", "America/Mexico_City": "MX", "America/Toronto": "CA", "America/Vancouver": "CA", "America/Edmonton": "CA", "America/Winnipeg": "CA", "America/Halifax": "CA", "America/New_York": "US", "America/Chicago": "US", "America/Denver": "US", "America/Phoenix": "US", "America/Los_Angeles": "US", "America/Anchorage": "US", "Pacific/Honolulu": "US",
+  "Europe/Vienna": "AT", "Europe/Brussels": "BE", "Europe/Sofia": "BG", "Europe/Zagreb": "HR", "Asia/Nicosia": "CY", "Europe/Prague": "CZ", "Europe/Tallinn": "EE", "Europe/Helsinki": "FI", "Europe/Athens": "GR", "Europe/Budapest": "HU", "Atlantic/Reykjavik": "IS", "Europe/Riga": "LV", "Europe/Vilnius": "LT", "Europe/Luxembourg": "LU", "Europe/Malta": "MT", "Europe/Lisbon": "PT", "Europe/Bucharest": "RO", "Europe/Moscow": "RU", "Europe/Belgrade": "RS", "Europe/Bratislava": "SK", "Europe/Ljubljana": "SI", "Europe/Zurich": "CH", "Europe/Istanbul": "TR",
+  "America/Argentina/Buenos_Aires": "AR", "America/Buenos_Aires": "AR", "America/Nassau": "BS", "America/La_Paz": "BO", "America/Santiago": "CL", "America/Bogota": "CO", "America/Costa_Rica": "CR", "America/Santo_Domingo": "DO", "America/Guayaquil": "EC", "America/El_Salvador": "SV", "America/Guatemala": "GT", "America/Tegucigalpa": "HN", "America/Jamaica": "JM", "America/Managua": "NI", "America/Panama": "PA", "America/Asuncion": "PY", "America/Lima": "PE", "America/Port_of_Spain": "TT", "America/Montevideo": "UY", "America/Caracas": "VE", "America/Guadeloupe": "GP", "America/Martinique": "MQ", "Indian/Reunion": "RE", "Pacific/Noumea": "NC",
+  "Asia/Bahrain": "BH", "Asia/Dhaka": "BD", "Africa/Cairo": "EG", "Asia/Shanghai": "CN", "Asia/Hong_Kong": "HK", "Asia/Jakarta": "ID", "Asia/Jerusalem": "IL", "Asia/Amman": "JO", "Africa/Nairobi": "KE", "Asia/Kuwait": "KW", "Asia/Beirut": "LB", "Asia/Kuala_Lumpur": "MY", "Indian/Maldives": "MV", "Indian/Mauritius": "MU", "Africa/Casablanca": "MA", "Africa/Lagos": "NG", "Asia/Muscat": "OM", "Asia/Karachi": "PK", "Asia/Manila": "PH", "Asia/Qatar": "QA", "Asia/Riyadh": "SA", "Asia/Singapore": "SG", "Africa/Johannesburg": "ZA", "Asia/Seoul": "KR", "Asia/Colombo": "LK", "Asia/Taipei": "TW", "Asia/Bangkok": "TH", "Asia/Dubai": "AE", "Asia/Ho_Chi_Minh": "VN", "Asia/Saigon": "VN", "Africa/Accra": "GH", "Africa/Dar_es_Salaam": "TZ" };
 function detectCountry() {
   let tz = ""; try { tz = Intl.DateTimeFormat().resolvedOptions().timeZone || ""; } catch (e) {}
   if (TZ[tz]) return TZ[tz];
@@ -327,18 +429,48 @@ function detectCountry() {
   return null;
 }
 const visitorISO = detectCountry();
+const regionName = iso => { try { return new Intl.DisplayNames(["en"], { type: "region" }).of(iso); } catch (e) { return iso; } };
+/* Island territories with no shape of their own on the 1:50m map: shown as markers */
+const MARKERS = [{ iso: "GP", n: "Guadeloupe", lat: 16.25, lng: -61.58, up: true }, { iso: "MQ", n: "Martinique", lat: 14.64, lng: -61.02 }, { iso: "RE", n: "Réunion", lat: -21.12, lng: 55.53 }];
+const hasData = (iso, m = mode) => !!(MARKETS[iso] && MARKETS[iso][m] && MARKETS[iso][m].films.length);
+const nameOf = iso => (MARKETS[iso] && MARKETS[iso].name) || (features.find(f => f.properties.iso === iso) || { properties: {} }).properties.n || regionName(iso);
 
 /* ===== Globe ===== */
 let globe, features = [], hoverF = null;
-const COL = { live: "rgba(200,35,46,.95)", liveHover: "rgba(232,64,72,1)", soon: "rgba(63,107,82,.85)", soonHover: "rgba(96,150,118,.95)", none: "rgba(58,35,38,.85)", noneHover: "rgba(90,58,62,.95)", side: "rgba(20,8,10,.6)", stroke: "rgba(255,240,230,.55)" };
-const st = f => f.properties[MODES[mode].key === "us" ? "st" : "lo"];
+/* Globe status per mode: "has" (has films) or "none" (no data) */
+const COL = { has: "rgba(200,35,46,.95)", hasHover: "rgba(232,64,72,1)", none: "rgba(58,35,38,.85)", noneHover: "rgba(90,58,62,.95)", side: "rgba(20,8,10,.6)", stroke: "rgba(255,240,230,.55)" };
+const st = f => f.properties[MODES[mode].key === "us" ? "st" : "lo"] === "has" ? "has" : "none";
 const capColor = f => COL[st(f) + (f === hoverF ? "Hover" : "")];
-const altFor = f => st(f) === "live" ? 0.03 : (f === hoverF ? 0.018 : 0.006);
+const altFor = f => st(f) === "has" ? (f === hoverF ? 0.04 : 0.03) : (f === hoverF ? 0.018 : 0.006);
 const homeView = () => ({ lat: 38, lng: -18, altitude: innerWidth < 640 ? 3.2 : 2.3 });
 
 function statusNote(s) {
-  if (mode === "us") return s === "live" ? "Tap to open the Top 10" : s === "soon" ? "Top 10 ready for the full build" : "No ranking in this edition";
-  return s === "live" ? "Tap to open its films" : s === "soon" ? "Films listed; live in the full build" : "No local list in this edition";
+  if (mode === "us") return s === "has" ? "Tap to open its Top 10" : "No data for this country";
+  return s === "has" ? "Tap to open its films" : "No data for this country";
+}
+function pinEl(d) {
+  const b = document.createElement("button");
+  b.type = "button"; b.className = "pin" + (d.up ? " up" : ""); b.dataset.iso = d.iso;
+  b.innerHTML = `<i></i><span>${esc(d.n)}</span>`;
+  // keep the globe's own pointer handling from also picking the polygon underneath (e.g. France under Martinique)
+  ["pointerdown", "pointerup", "mousedown", "mouseup", "touchstart", "touchend"].forEach(t => b.addEventListener(t, e => e.stopPropagation()));
+  b.addEventListener("click", e => { e.stopPropagation(); openCountry(d.iso, d.lat, d.lng); });
+  paintPin(b);
+  return b;
+}
+function paintPin(b) {
+  const iso = b.dataset.iso, s = hasData(iso) ? "has" : "none";
+  b.classList.toggle("has", s === "has"); b.classList.toggle("none", s === "none");
+  b.setAttribute("aria-label", `${nameOf(iso)}: ${statusNote(s)}`);
+}
+function paintPins() { document.querySelectorAll(".pin").forEach(paintPin); }
+/* Keep a marker's label inside the screen when the marker sits near an edge */
+function keepLabelOnScreen(el) {
+  const span = el.querySelector("span"); if (!span) return;
+  const prev = parseFloat(span.dataset.shift || 0), r = span.getBoundingClientRect();
+  const left = r.left - prev, right = r.right - prev, pad = 8;
+  const shift = left < pad ? pad - left : right > innerWidth - pad ? (innerWidth - pad) - right : 0;
+  if (Math.abs(shift - prev) > 0.5) { span.dataset.shift = shift; span.style.transform = shift ? `translateX(calc(-50% + ${shift}px))` : ""; }
 }
 function initGlobe(geo) {
   features = geo.features;
@@ -354,9 +486,17 @@ function initGlobe(geo) {
     .polygonAltitude(altFor)
     .polygonsTransitionDuration(reduceMotion ? 0 : 280)
     .polygonLabel(f => `<div class="tip"><strong>${esc(f.properties.n)}</strong>${esc(statusNote(st(f)))}</div>`)
-    .onPolygonHover(f => { hoverF = f; el.style.cursor = f && st(f) === "live" ? "pointer" : f ? "help" : "grab"; repaint(); })
+    .onPolygonHover(f => { hoverF = f; el.style.cursor = f ? "pointer" : "grab"; repaint(); })
     .onPolygonClick(onCountry)
+    .htmlElementsData(MARKERS)
+    .htmlLat(d => d.lat).htmlLng(d => d.lng).htmlAltitude(0.02)
+    .htmlElement(pinEl)
     .width(innerWidth).height(innerHeight);
+  if (typeof globe.htmlTransitionDuration === "function") globe.htmlTransitionDuration(0);
+  // hide markers on the far side of the globe
+  if (typeof globe.htmlElementVisibilityModifier === "function")
+    globe.htmlElementVisibilityModifier((el, visible) => { el.style.opacity = visible ? 1 : 0; el.style.pointerEvents = visible ? "auto" : "none"; el.tabIndex = visible ? 0 : -1; if (visible) keepLabelOnScreen(el); });
+  paintPins();
   const mat = globe.globeMaterial();
   mat.color && mat.color.set("#2A0F13");
   if (mat.emissive) { mat.emissive.set("#1A0709"); mat.emissiveIntensity = 0.6; }
@@ -366,7 +506,7 @@ function initGlobe(geo) {
   globe.pointOfView(homeView(), 0);
   addEventListener("resize", () => globe.width(innerWidth).height(innerHeight));
 }
-function repaint() { if (globe) globe.polygonCapColor(capColor).polygonAltitude(altFor); }
+function repaint() { if (globe) { globe.polygonCapColor(capColor).polygonAltitude(altFor); paintPins(); } }
 
 const snap5 = gsap.utils.snap(5);
 function flyTo(lat, lng, ms = 1300) {
@@ -379,9 +519,14 @@ function flyTo(lat, lng, ms = 1300) {
 }
 function onCountry(f) {
   if (!f) return;
-  const p = f.properties, s = st(f);
-  if (s === "live") { flyTo(p.ly, p.lx).then(() => openMarket(p.iso)); return; }
-  showToast(`${p.n}: ${statusNote(s).replace("Tap to open its films", "")}.`);
+  const p = f.properties;
+  openCountry(p.iso, p.ly, p.lx, p.n);
+}
+/* One entry point for shapes, markers, the welcome card and the Global button */
+function openCountry(iso, lat, lng, fallbackName) {
+  const go = () => hasData(iso) ? openMarket(iso) : openNoData(iso, fallbackName);
+  if (iso === "GLOBAL" || lat == null) return go();
+  flyTo(lat, lng).then(go);
 }
 
 let toastT;
@@ -394,9 +539,11 @@ function showToast(msg) {
 /* ===== Map key ("?") ===== */
 function renderKey() {
   const rows = mode === "us"
-    ? [["#C8232E", "Live in this mockup"], ["#3F6B52", "Top 10 ready for the full build"], ["#3A2326", "No ranking in this edition"]]
-    : [["#C8232E", "Live in this mockup"], ["#3F6B52", "Local films listed, live in the full build"], ["#3A2326", "No local list in this edition"]];
-  $("#keyPanel").innerHTML = `<h4>Map key · ${esc(MODES[mode].label)}</h4>` + rows.map(([c, t]) => `<span><i style="background:${c}"></i>${esc(t)}</span>`).join("");
+    ? [["#C8232E", "Has films: tap for its Top 10 made in the US"], ["#3A2326", "No data: tap to see Santa's note"]]
+    : [["#C8232E", "Has films: tap for the films made there"], ["#3A2326", "No data: tap to see Santa's note"]];
+  $("#keyPanel").innerHTML = `<h4>Map key · ${esc(MODES[mode].label)}</h4>` + rows.map(([c, t]) => `<span><i style="background:${c}"></i>${esc(t)}</span>`).join("")
+    + `<span><i class="dot"></i>Island marker (Guadeloupe, Martinique, Réunion)</span>`
+    + `<span><i style="background:var(--snow);border:1.5px solid var(--holly)"></i>Global Top 10: button at bottom left</span>`;
 }
 (() => {
   const key = $("#key"), btn = $("#keyBtn"), panel = $("#keyPanel"); let pinned = false;
@@ -416,7 +563,11 @@ function setMode(m, { rerender = true } = {}) {
   $("#wHelp").textContent = MODES[m].help;
   $("#modeChip").textContent = MODES[m].label;
   renderKey(); repaint();
-  if (rerender && current && !$("#modal").hidden) { filter = "All"; renderPanel(true); }
+  if (rerender && current && !$("#modal").hidden) {
+    if (current[m] && current[m].films.length) { filter = "All"; renderPanel(true); }
+    else { const iso = currentISO; closeModal(() => openNoData(iso)); }   // this country has nothing in the other mode
+  }
+  if (rerender && !$("#nodata").hidden) renderNoData();
 }
 document.querySelectorAll("[data-seg]").forEach(seg => seg.addEventListener("click", e => {
   const b = e.target.closest("button[data-mode]"); if (b && b.dataset.mode !== mode) setMode(b.dataset.mode);
@@ -435,35 +586,46 @@ function openWelcome() {
     .fromTo("#wScrim", { opacity: 0 }, { opacity: 1, duration: .35 })
     .fromTo("#welcome", { y: 50, opacity: 0, scale: .96 }, { y: 0, opacity: 1, scale: 1, duration: .65, ease: "back.out(1.4)" }, "<.05")
     .fromTo("#welcome > *:not(.x)", { y: 16, opacity: 0 }, { y: 0, opacity: 1, stagger: .07, duration: .45, ease: "power3.out" }, "<.15");
-  $("#openUK").focus();
+  $("#openMine").focus();
 }
 function closeWelcome(then) {
-  store.set("cw-welcomed", "1");
   const done = () => { $("#welcome").hidden = true; $("#wScrim").hidden = true; gsap.set("#welcome", { clearProps: "all" }); then ? then() : (lastFocus && lastFocus.focus && lastFocus.focus()); };
   if (reduceMotion) return done();
   gsap.timeline({ onComplete: done }).to("#welcome", { y: 30, opacity: 0, duration: .25, ease: "power2.in" }).to("#wScrim", { opacity: 0, duration: .2 }, "<.05");
 }
 $("#wClose").addEventListener("click", () => closeWelcome());
+$("#explore").addEventListener("click", () => closeWelcome(() => { if (globe) globe.controls().autoRotate = !reduceMotion; }));
 $("#wScrim").addEventListener("click", () => closeWelcome());
 $("#home").addEventListener("click", () => {
   if (!$("#modal").hidden) closeModal();
   globe && globe.pointOfView(homeView(), reduceMotion ? 0 : 1200);
   openWelcome();
 });
-$("#openUK").addEventListener("click", () => closeWelcome(() => { const g = MARKETS.GB; if (!g) return showToast("Still loading the list. Try again in a moment."); flyTo(g.lat, g.lng).then(() => openMarket("GB")); }));
-$("#spinMe").addEventListener("click", () => closeWelcome(() => {
-  const f = features.find(x => x.properties.iso === visitorISO);
-  if (!f) return showToast("We couldn't tell your country from this device. Spin the globe and tap it instead.");
-  flyTo(f.properties.ly, f.properties.lx).then(() => {
-    if (st(f) === "live") openMarket(f.properties.iso);
-    else showToast(`${f.properties.n}: ${statusNote(st(f))}.`);
-  });
+/* "Open <your country>": guessed from time zone or browser language, falling back to the United Kingdom */
+let myISO = "GB";
+function setMyCountry() {
+  const known = visitorISO && (features.some(f => f.properties.iso === visitorISO) || MARKERS.some(d => d.iso === visitorISO) || MARKETS[visitorISO]);
+  myISO = known ? visitorISO : (features.length ? "GB" : (visitorISO || "GB"));
+  $("#openMineLbl").textContent = `Open ${nameOf(myISO)}`;
+}
+setMyCountry();
+$("#openMine").addEventListener("click", () => closeWelcome(() => {
+  if (!features.length) return showToast("Still loading the globe. Try again in a moment.");
+  const f = features.find(x => x.properties.iso === myISO), mk = MARKERS.find(d => d.iso === myISO), m = MARKETS[myISO];
+  const lat = f ? f.properties.ly : mk ? mk.lat : m && m.lat, lng = f ? f.properties.lx : mk ? mk.lng : m && m.lng;
+  openCountry(myISO, lat, lng, f && f.properties.n);
 }));
+$("#globalBtn").addEventListener("click", () => {
+  if (!features.length) return showToast("Still loading the list. Try again in a moment.");
+  if (!$("#modal").hidden) return closeModal(() => openCountry("GLOBAL"));
+  if (!$("#nodata").hidden) return closeNoData(() => openCountry("GLOBAL"));
+  openCountry("GLOBAL");
+});
 
 /* ===== Film panel ===== */
 gsap.registerPlugin(ScrollTrigger);
 gsap.ticker.lagSmoothing(0);              // keep animation timing true on slow GPUs
-let current = null, filter = "All", panelFocus = null, batchTriggers = [], snapTrigger = null;
+let current = null, currentISO = null, filter = "All", panelFocus = null, batchTriggers = [], snapTrigger = null;
 
 const US_SCALE = ["G", "PG", "PG-13", "R"];
 const ratingGroup = (f) => mode === "us" ? (/^TV/.test(f.rating) ? "TV" : (f.rating || "Unverified")) : (f.rating || "Unverified");
@@ -476,7 +638,7 @@ const shown = () => filter === "All" ? list().films : list().films.filter(f => r
 function renderTabs() {
   const data = list(), counts = {};
   data.films.forEach(f => { const k = ratingGroup(f); counts[k] = (counts[k] || 0) + 1; });
-  const label = mode === "us" ? "US rating" : `${data.authority} rating`;
+  const label = mode === "us" ? "US rating" : data.authority ? `${data.authority} rating` : "Local rating";
   $("#tabs").innerHTML = `<span class="filter-label">${esc(label)}</span>` + tabsFor(data).map(r => {
     const n = r === "All" ? data.films.length : (counts[r] || 0);
     return `<button class="tab" type="button" data-r="${esc(r)}" aria-pressed="${r === filter}" ${n ? "" : "disabled"}>${esc(r)} <small>${n}</small></button>`;
@@ -488,7 +650,8 @@ const MAX_WAYS = 3;                       // priority: Stream, then Free, then R
 function svcButton(f, s) {
   const lbl = `<span class="lbl">${esc(s.name)}</span>`;
   if (s.url) return `<a class="svc" href="${esc(s.url)}" target="_blank" rel="noopener" title="${esc(s.name)}" aria-label="Watch ${esc(f.title)} on ${esc(s.name)}">${lbl} ${PLAY}</a>`;
-  return `<a class="svc via" href="${esc(f.jw)}" target="_blank" rel="noopener" title="${esc(s.name)} has no direct film link; opens the JustWatch listing" aria-label="Find ${esc(f.title)} on ${esc(s.name)} via JustWatch">${lbl} ${PLAY}</a>`;
+  const search = /\/search\?/.test(f.jw || "");
+  return `<a class="svc via" href="${esc(f.jw)}" target="_blank" rel="noopener" title="${esc(s.name)} has no direct film link; opens ${search ? "a JustWatch search" : "the JustWatch listing"}" aria-label="Find ${esc(f.title)} on ${esc(s.name)} via JustWatch">${lbl} ${PLAY}</a>`;
 }
 function watchHTML(f) {
   const w = (f.watch && f.watch[LINK_REGION]) || {};
@@ -497,19 +660,25 @@ function watchHTML(f) {
     : `<span class="svc na" aria-label="Unavailable in the United States">Unavailable</span>`;
   return `<h4>Where to watch</h4>${body}`;
 }
-const ORIGIN_SHORT = { "United States": "US", "United Kingdom": "UK", "France": "France", "Germany": "Germany", "Czechia": "Czechia", "Poland": "Poland" };
+const ORIGIN_SHORT = { "United States": "US", "United Kingdom": "UK", "Soviet Union": "the Soviet Union", "Czech Republic": "Czechia" };
 function originText(f) {
   const o = f.origin.map(x => ORIGIN_SHORT[x] || x);
-  return o.length === 1 ? `Made in ${o[0]}` : `${o.join(" · ")} co-production`;
+  if (!o.length) return "Origin not recorded";
+  const t = o.length === 1 ? `Made in ${o[0]}` : `${o.join(" · ")} co-production`;
+  return f.era ? `${t} (Soviet-era film)` : t;
 }
+const the = m => (m.the ? "the " : "");
 function filmHTML(f) {
+  const auth = f.authority || list().authority;
   const ratingChips = mode === "us"
     ? `<span class="rating${f.rating === "R" ? " hot" : ""}" title="${f.cert ? "MPA certificate #" + esc(f.cert) : "US rating"}">${esc(f.rating)}</span>`
-    : `<span class="rating${/^(15|18)$/.test(f.rating) ? " hot" : ""}" title="${esc(list().authority)} rating">${esc(list().authority)} ${esc(f.rating)}</span>` +
+    : `<span class="rating${f.hot ? " hot" : ""}" title="${esc(auth || "Local")} rating">${f.rating === "Unverified" || !auth ? esc(f.rating) : `${esc(auth)} ${esc(f.rating)}`}</span>` +
       (f.usr ? `<span class="rating us" title="US rating">US ${esc(f.usr)}</span>` : `<span class="rating us" title="No US rating found">US –</span>`);
-  const extra = mode === "us" ? `<span>Index ${f.index.toFixed(1)}</span>` : "";
+  const extra = mode === "us" && f.index != null ? `<span>Index ${f.index.toFixed(1)}</span>` : "";
+  const img = f.poster ? `<img src="${esc(f.poster)}" alt="Poster for ${esc(f.title)}" loading="lazy" width="84" height="126">`
+    : `<span class="ph" role="img" aria-label="No poster available for ${esc(f.title)}">${esc(f.title.replace(/\s*\(.*\)\s*$/, ""))}</span>`;
   return `<article class="film">
-    <div class="poster"><img src="${esc(f.poster)}" alt="Poster for ${esc(f.title)}" loading="lazy" width="84" height="126"><span class="rank" aria-label="${mode === "us" ? "UK rank" : "List number"} ${f.pos}">${f.pos}</span></div>
+    <div class="poster">${img}<span class="rank" aria-label="${mode === "us" ? `${esc(current.code)} rank` : "List number"} ${f.pos}">${f.pos}</span></div>
     <div class="name">
       <h3>${esc(f.title)}</h3>
       <div class="meta">${ratingChips}<span>${f.year}</span>${extra}</div>
@@ -528,12 +697,15 @@ function renderList() {
 function renderPanel(animate) {
   const m = current, isUS = mode === "us";
   $("#mTitle").textContent = m.name;
+  const auth = !isUS && m.local.authority;
   $("#mSub").textContent = isUS
-    ? `From the ${m.code}'s Christmas Top 10 (combined TV, Netflix and JustWatch evidence), keeping the films made in the United States. Numbers are the ${m.code} ranks.`
-    : `Christmas films produced in the ${m.code}, rated by the ${m.local.authority}. Numbered in research order, not by audience size.`;
+    ? (m.code === "global"
+      ? `From the global Christmas Top 10 (combined TV, Netflix and JustWatch evidence), keeping the films made in the United States. Numbers are the global ranks.`
+      : `From ${the(m)}${m.code}'s Christmas Top 10 (combined TV, Netflix and JustWatch evidence), keeping the films made in the United States. Numbers are the ${m.code} ranks.`)
+    : `Christmas films produced in ${the(m)}${m.code}, ${auth ? `rated by ${/^(BBFC|MPA|FSK|CNC|ICAA|KAVI|KMRB)$/.test(auth) ? "the " : ""}${auth}` : "with no local rating verified yet"}. Numbered in research order, not by audience size.`;
   $("#mFoot").innerHTML = isUS
     ? `<span>Watch links: United States, from JustWatch, checked 24–26 Nov 2026. Ratings: MPA, checked 25 Nov 2026.</span><span>Index is a composite estimate, not a viewer count.</span>`
-    : `<span>Watch links: United States, from JustWatch, checked 24–26 Nov 2026. Ratings: ${esc(m.local.authority)}, checked 25 Nov 2026.</span><span>A research selection, not a viewing ranking.</span>`;
+    : `<span>Watch links: United States, from JustWatch, checked 24–26 Nov 2026. Ratings: ${auth ? esc(auth) : "local board, not verified"}, checked 25 Nov 2026.</span><span>A research selection, not a viewing ranking.</span>`;
   renderTabs();
   if (animate && !reduceMotion) {
     gsap.to("#list .film", { opacity: 0, y: -14, duration: .16, stagger: .02, onComplete: renderList });
@@ -564,8 +736,8 @@ function wireMotion() {
 }
 
 function openMarket(iso) {
-  const m = MARKETS[iso]; if (!m) return;
-  current = m; filter = "All"; panelFocus = document.activeElement;
+  const m = MARKETS[iso]; if (!m || !hasData(iso)) return openNoData(iso);
+  current = m; currentISO = iso; filter = "All"; panelFocus = document.activeElement;
   const scrim = $("#scrim"), modal = $("#modal");
   scrim.hidden = false; modal.hidden = false;
   renderPanel(false);
@@ -581,13 +753,65 @@ function openMarket(iso) {
   }
   $("#mClose").focus();
 }
-function closeModal() {
+function closeModal(then) {
   const scrim = $("#scrim"), modal = $("#modal");
   const done = () => { modal.hidden = true; scrim.hidden = true; gsap.set(modal, { clearProps: "all" }); batchTriggers.forEach(t => t.kill()); if (snapTrigger) snapTrigger.kill();
-    if (globe) { globe.resumeAnimation(); globe.controls().autoRotate = !reduceMotion; } panelFocus && panelFocus.focus && panelFocus.focus(); };
+    if (globe) { globe.resumeAnimation(); globe.controls().autoRotate = !reduceMotion; }
+    if (typeof then === "function") then(); else panelFocus && panelFocus.focus && panelFocus.focus(); };
   if (reduceMotion) return done();
   gsap.timeline({ onComplete: done }).to(modal, { y: 40, opacity: 0, duration: .25, ease: "power2.in" }).to(scrim, { opacity: 0, duration: .2 }, "<.05");
 }
+
+/* ===== "No data" card: Santa waves in when a country has nothing in the current mode ===== */
+let ndISO = null, ndName = null, ndFocus = null, santaTl = null;
+function renderNoData() {
+  const name = nameOf(ndISO) || ndName || "This country", other = mode === "us" ? "local" : "us";
+  const isGlobal = ndISO === "GLOBAL";
+  $("#nTitle").textContent = name;
+  $("#nWhy").textContent = mode === "us"
+    ? (isGlobal ? "The global list only exists as a US movies Top 10." : `Neither guide ranks what ${name} watches at Christmas, so there's no US movies list here yet.`)
+    : (isGlobal ? "There's no Country specific list for the whole world." : `The guides list no Christmas films made in ${name}, so there's no Country specific list here yet.`);
+  $("#nCta").innerHTML = hasData(ndISO, other)
+    ? `<button class="btn btn-snow" type="button" data-switch="${other}">See its ${esc(MODES[other].label)} list</button>`
+    : `<button class="btn btn-snow" type="button" data-back>Back to the globe</button>`;
+}
+function openNoData(iso, fallbackName) {
+  ndISO = iso; ndName = fallbackName; ndFocus = document.activeElement;
+  renderNoData();
+  const card = $("#nodata"), scrim = $("#nScrim");
+  scrim.hidden = false; card.hidden = false;
+  if (globe) globe.controls().autoRotate = false;
+  if (!reduceMotion) {
+    const mobile = innerWidth <= 640;
+    gsap.timeline()
+      .fromTo(scrim, { opacity: 0 }, { opacity: 1, duration: .3 })
+      .fromTo(card, { xPercent: -50, yPercent: -50, y: mobile ? 60 : 70, scale: mobile ? 1 : .9, opacity: 0 }, { xPercent: -50, yPercent: -50, y: 0, scale: 1, opacity: 1, duration: .6, ease: "back.out(1.5)" }, "<.05")
+      .fromTo("#santa", { y: 30, scale: .6, rotation: -8, transformOrigin: "50% 100%" }, { y: 0, scale: 1, rotation: 0, duration: .7, ease: "elastic.out(1, .55)" }, "<.15")
+      .fromTo("#nodata > :not(.santa):not(.close)", { y: 12, opacity: 0 }, { y: 0, opacity: 1, stagger: .07, duration: .35, ease: "power3.out" }, "<.15");
+    santaTl && santaTl.kill();
+    santaTl = gsap.timeline({ repeat: -1, delay: .5 })
+      .to("#sArm", { rotation: -18, duration: .28, ease: "sine.inOut", yoyo: true, repeat: 5 })
+      .to("#sHead", { rotation: 4, transformOrigin: "80px 90px", duration: .5, ease: "sine.inOut", yoyo: true, repeat: 1 }, "<")
+      .to("#sPom", { y: -3, duration: .3, ease: "sine.inOut", yoyo: true, repeat: 3 }, "<")
+      .to({}, { duration: 1.6 });
+  }
+  $("#nClose").focus();
+}
+function closeNoData(then) {
+  const card = $("#nodata"), scrim = $("#nScrim");
+  const done = () => { card.hidden = true; scrim.hidden = true; santaTl && santaTl.kill(); santaTl = null; gsap.set([card, "#santa", "#sArm", "#sHead", "#sPom"], { clearProps: "all" });
+    if (globe && $("#modal").hidden) globe.controls().autoRotate = !reduceMotion;
+    if (typeof then === "function") then(); else ndFocus && ndFocus.focus && ndFocus.focus(); };
+  if (reduceMotion) return done();
+  gsap.timeline({ onComplete: done }).to(card, { xPercent: -50, yPercent: -50, y: 30, opacity: 0, duration: .22, ease: "power2.in" }).to(scrim, { opacity: 0, duration: .2 }, "<.05");
+}
+$("#nClose").addEventListener("click", () => closeNoData());
+$("#nScrim").addEventListener("click", () => closeNoData());
+$("#nCta").addEventListener("click", e => {
+  const b = e.target.closest("button"); if (!b) return;
+  if (b.dataset.switch) { const iso = ndISO, m = b.dataset.switch; closeNoData(() => { setMode(m); openMarket(iso); }); }
+  else closeNoData();
+});
 
 $("#tabs").addEventListener("click", e => {
   const b = e.target.closest(".tab"); if (!b || b.disabled) return;
@@ -604,9 +828,9 @@ function trap(e, root) {
   else if (!e.shiftKey && document.activeElement === f[f.length - 1]) { e.preventDefault(); f[0].focus(); }
 }
 addEventListener("keydown", e => {
-  const w = !$("#welcome").hidden, m = !$("#modal").hidden;
-  if (e.key === "Escape") { if (w) closeWelcome(); else if (m) closeModal(); }
-  if (e.key === "Tab") { if (w) trap(e, $("#welcome")); else if (m) trap(e, $("#modal")); }
+  const w = !$("#welcome").hidden, m = !$("#modal").hidden, n = !$("#nodata").hidden;
+  if (e.key === "Escape") { if (w) closeWelcome(); else if (n) closeNoData(); else if (m) closeModal(); }
+  if (e.key === "Tab") { if (w) trap(e, $("#welcome")); else if (n) trap(e, $("#nodata")); else if (m) trap(e, $("#modal")); }
 });
 
 /* ===== String lights ===== */
@@ -637,8 +861,8 @@ function startSnow() {
 
 /* ===== Boot ===== */
 drawLights(); startSnow(); setMode(mode, { rerender: false });
-if (!store.get("cw-welcomed")) openWelcome();
+openWelcome();                             // every visit: choose "Open <your country>" or "Explore the globe"
 Promise.all([fetch("data/countries.json").then(r => r.json()), fetch("data/markets.json").then(r => r.json())])
-  .then(([geo, markets]) => { MARKETS = markets; initGlobe(geo); repaint(); })
+  .then(([geo, markets]) => { MARKETS = markets; initGlobe(geo); repaint(); setMyCountry(); })
   .catch(() => showToast("The globe could not load. Refresh the page to try again."));
 </script>
