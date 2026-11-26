@@ -167,6 +167,9 @@ header.bar {
   background: var(--snow); color: var(--holly); display: grid; place-items: center; box-shadow: 0 6px 16px rgba(0,0,0,.18);
 }
 .close:hover { background: #fff; transform: scale(1.05); }
+/* keyboard focus on a close button: inverted (holly with a white cross) instead of the gold ring */
+.close:focus-visible { outline: none; background: var(--holly); color: #fff; box-shadow: 0 0 0 2px #fff, 0 6px 16px rgba(0,0,0,.25); }
+.modal:focus, .nodata:focus { outline: none; }
 .modal h2 { margin: 0; font: 700 clamp(30px, 5vw, 44px)/1.02 var(--body); letter-spacing: -.01em; text-wrap: balance; }
 .modal .sub { margin: 0; color: rgba(255,244,241,.85); font-size: 14px; max-width: 56ch; }
 .controls { display: flex; flex-wrap: wrap; gap: 10px 16px; align-items: center; }
@@ -332,7 +335,7 @@ header.bar {
 
 <!-- "No data" card: an original Santa drawn in SVG -->
 <div class="scrim" id="nScrim" hidden></div>
-<section class="nodata" id="nodata" role="dialog" aria-modal="true" aria-labelledby="nTitle" aria-describedby="nWhy" hidden>
+<section class="nodata" id="nodata" role="dialog" aria-modal="true" aria-labelledby="nTitle" aria-describedby="nWhy" tabindex="-1" hidden>
   <button class="close" id="nClose" type="button" aria-label="Close">
     <svg width="16" height="16" viewBox="0 0 24 24" aria-hidden="true"><path d="M6 6l12 12M18 6 6 18" stroke="currentColor" stroke-width="2.6" stroke-linecap="round"/></svg>
   </button>
@@ -383,7 +386,7 @@ header.bar {
 
 <!-- Film panel -->
 <div class="scrim" id="scrim" hidden></div>
-<div class="modal" id="modal" role="dialog" aria-modal="true" aria-labelledby="mTitle" hidden>
+<div class="modal" id="modal" role="dialog" aria-modal="true" aria-labelledby="mTitle" tabindex="-1" hidden>
   <div class="modal-head">
     <div class="head-top">
       <h2 class="head-title" id="mTitle">United Kingdom</h2>
@@ -770,7 +773,7 @@ function openMarket(iso) {
       .fromTo(".head-side > *", { x: 16, opacity: 0 }, { x: 0, opacity: 1, stagger: .08, duration: .4, ease: "power3.out" }, "<.15")
       .fromTo("#tabs .tab", { y: 10, opacity: 0 }, { y: 0, opacity: 1, stagger: .04, duration: .3 }, "<.1");
   }
-  $("#mClose").focus();
+  modal.focus({ preventScroll: true });   // focus the panel, not the close button, so no focus ring shows on open
 }
 function closeModal(then) {
   const scrim = $("#scrim"), modal = $("#modal");
@@ -814,7 +817,7 @@ function openNoData(iso, fallbackName) {
       .to("#sPom", { y: -3, duration: .3, ease: "sine.inOut", yoyo: true, repeat: 3 }, "<")
       .to({}, { duration: 1.6 });
   }
-  $("#nClose").focus();
+  card.focus({ preventScroll: true });    // same for the Santa card
 }
 function closeNoData(then) {
   const card = $("#nodata"), scrim = $("#nScrim");
