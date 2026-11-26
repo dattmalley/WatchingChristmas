@@ -40,6 +40,8 @@ There is no separate "global" file. Each guide ends with a **Global Top Ten** se
   - GSAP 3.15.0 and ScrollTrigger via jsDelivr, with `gsap.ticker.lagSmoothing(0)`.
 - **Title pill (top-left):** "Watching Christmas" in **Cherry Swash Bold**, red, **no white outline**, **no tree**, plus a chip showing the current mode. Clicking it reopens the welcome card. **Nothing at the top right**; the location display was removed on purpose.
 - **Globe hover (Matt, 26 Nov 2026):** a country with films turns **Christmas green `#00873E`** (`--xmas-green`, `COL.hasHover`); no-data countries keep their subtle dark hover.
+- **No-data countries (Matt, 26 Nov 2026):** muted red-and-white **candy-cane stripes** (diagonal in latitude + longitude, fixed to the land), so they read as disabled; slightly brighter on hover. Done by borrowing globe.gl's cap `MeshBasicMaterial` class and patching its shader (`caneMaterials()` in `index.html`). The map key's "No data" swatch uses the matching `--cane` gradient.
+- **Favicon:** an inline SVG Christmas tree (green tree, gold star, red/gold/white baubles on maroon) in the `<link rel="icon">` data URI. The "no tree" rule above applies to the title pill only.
 - **Map key:** a **"?" button** at the bottom right. Hover or focus shows the key, a click pins it, and it's hidden otherwise. Its wording follows the mode.
 - **Welcome card:** shows on **every visit** (Matt, 26 Nov 2026; it used to show on the first visit only). It contains:
   - the title in Cherry Swash red with a drop shadow and no outline;

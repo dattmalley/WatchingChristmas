@@ -1,6 +1,7 @@
 <title>Watching Christmas</title>
 <meta charset="utf-8">
 <meta name="claude:viewport-fit-sides" content="cover">
+<link rel="icon" type="image/svg+xml" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32'><rect width='32' height='32' rx='7' fill='%233A1317'/><path d='M16 5 9.5 14h3.5L8 21h4.5L7 27h18l-5.5-6H24l-5-7h3.5z' fill='%2300873E'/><rect x='14' y='27' width='4' height='3' rx='1' fill='%238B5A2B'/><path d='m16 2 1.2 2.5 2.7.3-2 1.8.6 2.7-2.5-1.4-2.5 1.4.6-2.7-2-1.8 2.7-.3z' fill='%23F7C948'/><circle cx='13.5' cy='16.5' r='1.6' fill='%23E5302F'/><circle cx='19' cy='19.5' r='1.6' fill='%23F7C948'/><circle cx='12' cy='24' r='1.6' fill='%23FFFCF8'/><circle cx='20.5' cy='25' r='1.6' fill='%23E5302F'/></svg>">
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Cherry+Swash:wght@700&family=Outfit:wght@400;500;600;700&family=Saira+Condensed:wght@600;700&display=swap">
@@ -19,7 +20,8 @@
   --pine: #21402F;
   --sage: #CBE0BE;
   --gold: #F7C948;
-  --xmas-green: #00873E;   /* hover on countries with films (globe; mirrored in COL.hasHover) */
+  --xmas-green: #00873E;
+  --cane: repeating-linear-gradient(135deg, #6A3A40 0 3px, #8E8183 3px 6px);   /* muted candy cane = no data */   /* hover on countries with films (globe; mirrored in COL.hasHover) */
   --ink: #2B1A1C;
   --muted: #7A6466;
   --on-red: #FFF4F1;
@@ -497,6 +499,7 @@ function initGlobe(geo) {
     .showAtmosphere(false)
     .polygonsData(features)
     .polygonCapColor(capColor)
+    .polygonCapMaterial(capMaterial)
     .polygonSideColor(() => COL.side)
     .polygonStrokeColor(() => COL.stroke)
     .polygonAltitude(altFor)
@@ -513,6 +516,7 @@ function initGlobe(geo) {
   if (typeof globe.htmlElementVisibilityModifier === "function")
     globe.htmlElementVisibilityModifier((el, visible) => { el.style.opacity = visible ? 1 : 0; el.style.pointerEvents = visible ? "auto" : "none"; el.tabIndex = visible ? 0 : -1; if (visible) keepLabelOnScreen(el); });
   paintPins();
+  waitForCane();
   const mat = globe.globeMaterial();
   mat.color && mat.color.set("#2A0F13");
   if (mat.emissive) { mat.emissive.set("#1A0709"); mat.emissiveIntensity = 0.6; }
@@ -522,7 +526,40 @@ function initGlobe(geo) {
   globe.pointOfView(homeView(), 0);
   addEventListener("resize", () => globe.width(innerWidth).height(innerHeight));
 }
-function repaint() { if (globe) { globe.polygonCapColor(capColor).polygonAltitude(altFor); paintPins(); } }
+function repaint() { if (globe) { globe.polygonCapColor(capColor).polygonCapMaterial(capMaterial).polygonAltitude(altFor); paintPins(); } }
+
+/* No-data countries: muted red-and-white candy-cane stripes, so they read as disabled.
+   globe.gl draws each cap with a MeshBasicMaterial; we borrow that class from the scene and
+   patch its shader to stripe by latitude + longitude (diagonal everywhere, fixed to the land). */
+let CANE = null;
+function caneMaterials() {
+  if (CANE || !globe) return CANE;
+  let Basic = null;
+  globe.scene().traverse(o => { if (!Basic && o.__globeObjType === "polygon" && o.children[0] && Array.isArray(o.children[0].material)) Basic = o.children[0].material[1].constructor; });
+  if (!Basic) return null;
+  const lin = hex => [0, 2, 4].map(i => Math.pow(parseInt(hex.slice(1 + i, 3 + i), 16) / 255, 2.2).toFixed(4)).join(", ");   // sRGB -> linear
+  const make = (red, white, key) => {
+    const m = new Basic({ side: 2, depthWrite: true });
+    m.customProgramCacheKey = () => "cane-" + key;
+    m.onBeforeCompile = sh => {
+      sh.vertexShader = "varying vec3 vCaneWP;\n" + sh.vertexShader.replace("#include <begin_vertex>", "#include <begin_vertex>\nvCaneWP = (modelMatrix * vec4(transformed, 1.0)).xyz;");
+      sh.fragmentShader = "varying vec3 vCaneWP;\n" + sh.fragmentShader.replace("vec4 diffuseColor = vec4( diffuse, opacity );",
+        `vec3 caneN = normalize(vCaneWP);
+         // diagonal in latitude/longitude, so the stripes run the same way everywhere and stay on the land;
+         // the 2.4-degree period divides 360, so they meet up cleanly across the date line
+         float caneT = (degrees(asin(clamp(caneN.y, -1.0, 1.0))) + degrees(atan(caneN.x, caneN.z))) / 2.4;
+         float caneW = min(fwidth(caneT) * 1.5, 0.25);
+         float caneS = smoothstep(0.5 - caneW, 0.5 + caneW, abs(fract(caneT) - 0.5) * 2.0);
+         vec4 diffuseColor = vec4(mix(vec3(${lin(red)}), vec3(${lin(white)}), caneS), opacity);`);
+    };
+    return m;
+  };
+  CANE = { rest: make("#5E3036", "#7E7173", "rest"), hover: make("#7A3E45", "#A39698", "hover") };
+  return CANE;
+}
+const capMaterial = f => { if (st(f) !== "none") return null; const c = caneMaterials(); return c ? (f === hoverF ? c.hover : c.rest) : null; };
+/* the cap materials exist only after globe.gl's first render: retry until we can borrow the class */
+function waitForCane(tries = 0) { if (caneMaterials()) return repaint(); if (tries < 120) requestAnimationFrame(() => waitForCane(tries + 1)); }
 
 const snap5 = gsap.utils.snap(5);
 function flyTo(lat, lng, ms = 1300) {
@@ -555,8 +592,8 @@ function showToast(msg) {
 /* ===== Map key ("?") ===== */
 function renderKey() {
   const rows = mode === "us"
-    ? [["#C8232E", "Has films: tap for its Top 10 made in the US"], ["#3A2326", "No data: tap to see Santa's note"]]
-    : [["#C8232E", "Has films: tap for the films made there"], ["#3A2326", "No data: tap to see Santa's note"]];
+    ? [["#C8232E", "Has films: tap for its Top 10 made in the US"], ["var(--cane)", "No data (candy cane): tap to see Santa's note"]]
+    : [["#C8232E", "Has films: tap for the films made there"], ["var(--cane)", "No data (candy cane): tap to see Santa's note"]];
   $("#keyPanel").innerHTML = `<h4>Map key · ${esc(MODES[mode].label)}</h4>` + rows.map(([c, t]) => `<span><i style="background:${c}"></i>${esc(t)}</span>`).join("")
     + `<span><i class="dot"></i>Island marker (Guadeloupe, Martinique, Réunion)</span>`
     + `<span><i style="background:var(--snow);border:1.5px solid var(--holly)"></i>Global Top 10: button at bottom left</span>`;
