@@ -1,0 +1,644 @@
+<title>Christmas Watchlist</title>
+<meta charset="utf-8">
+<meta name="claude:viewport-fit-sides" content="cover">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Cherry+Swash:wght@700&family=Outfit:wght@400;500;600;700&family=Saira+Condensed:wght@600;700&display=swap">
+<style>
+/* Layout: a night-sky stage with a slow globe at centre and string lights across the top.
+   A welcome card opens on first visit; a holly-red panel rises over the globe when a country is picked. */
+:root {
+  --night: #170A0C;
+  --ember: #3A1317;
+  --holly: #C8232E;
+  --holly-deep: #9E1A23;
+  --title-red: #E5302F;    /* the "A Christmas Story" red, lifted for the dark stage */
+  --glass: rgba(255,255,255,.13);
+  --glass-line: rgba(255,255,255,.28);
+  --snow: #FFFCF8;
+  --pine: #21402F;
+  --sage: #CBE0BE;
+  --gold: #F7C948;
+  --ink: #2B1A1C;
+  --muted: #7A6466;
+  --on-red: #FFF4F1;
+  --display: "Cherry Swash", "Cooper Black", Georgia, serif;
+  --title: "Saira Condensed", "Arial Narrow", sans-serif;
+  --body: "Outfit", system-ui, -apple-system, "Segoe UI", sans-serif;
+  --r-lg: 34px; --r-md: 22px; --r-sm: 14px;
+  color-scheme: dark;
+}
+* { box-sizing: border-box; }
+[hidden] { display: none !important; }
+html, body { height: 100%; }
+body {
+  margin: 0; overflow: hidden;
+  background: radial-gradient(120% 90% at 50% 60%, var(--ember) 0%, var(--night) 62%);
+  color: var(--on-red); font-family: var(--body); font-size: 15px; line-height: 1.5;
+}
+a { color: inherit; }
+button { font: inherit; }
+:focus-visible { outline: 3px solid var(--gold); outline-offset: 3px; }
+
+/* ---------- stage ---------- */
+#globe { position: fixed; inset: 0; }
+#snow { position: fixed; inset: 0; pointer-events: none; z-index: 1; }
+.lights { position: fixed; left: 0; right: 0; top: env(safe-area-inset-top, 0px); height: 70px; z-index: 3; pointer-events: none; }
+.lights path { fill: none; stroke: rgba(255,255,255,.35); stroke-width: 1.2; }
+.bulb { animation: twinkle 2.6s ease-in-out infinite; }
+@keyframes twinkle { 0%,100% { opacity: 1 } 50% { opacity: .35 } }
+
+.wordmark { font-family: var(--display); font-weight: 700; color: var(--title-red); letter-spacing: .005em; line-height: 1; }
+
+header.bar {
+  position: fixed; z-index: 4; left: 0; right: 0; top: calc(env(safe-area-inset-top, 0px) + 26px);
+  display: flex; align-items: center; justify-content: flex-start; gap: 10px;
+  padding-left: max(16px, env(safe-area-inset-left, 0px)); padding-right: max(16px, env(safe-area-inset-right, 0px));
+  pointer-events: none;
+}
+.pill {
+  display: inline-flex; align-items: center; gap: 8px; border-radius: 999px; pointer-events: auto; cursor: pointer;
+  background: var(--snow); padding: 8px 18px; border: 0;
+  box-shadow: 0 8px 24px rgba(0,0,0,.25); text-decoration: none; white-space: nowrap;
+}
+.brand .wordmark { font-size: 21px; color: var(--holly); }
+.mode-chip { font-size: 12px; font-weight: 600; color: var(--ink); background: var(--sage); border-radius: 999px; padding: 3px 10px; }
+
+.btn {
+  display: inline-flex; align-items: center; gap: 8px; border-radius: 999px; border: 0; cursor: pointer;
+  padding: 12px 22px; font-weight: 600; font-size: 15px; text-decoration: none;
+}
+.btn-red { background: var(--holly); color: #fff; box-shadow: 0 10px 26px rgba(200,35,46,.45); }
+.btn-red:hover { background: var(--holly-deep); }
+.btn-ghost { background: var(--glass); color: var(--on-red); border: 1px solid var(--glass-line); }
+.btn-ghost:hover { background: rgba(255,255,255,.2); }
+
+/* ---------- map key: a "?" that reveals the key on hover, focus or click ---------- */
+.key { position: fixed; z-index: 5; right: max(16px, env(safe-area-inset-right, 0px)); bottom: calc(env(safe-area-inset-bottom, 0px) + 22px); }
+.key-btn {
+  width: 44px; height: 44px; border-radius: 50%; border: 1px solid var(--glass-line); cursor: pointer;
+  background: rgba(23,10,12,.7); color: var(--on-red); font: 700 20px var(--body); display: grid; place-items: center;
+  box-shadow: 0 8px 20px rgba(0,0,0,.35);
+}
+.key-btn:hover, .key-btn[aria-expanded="true"] { background: var(--snow); color: var(--holly); }
+.key-panel {
+  position: absolute; right: 0; bottom: 54px; width: max-content; max-width: min(300px, calc(100vw - 32px));
+  display: grid; gap: 7px; font-size: 12.5px; color: var(--ink);
+  background: var(--snow); border-radius: var(--r-sm); padding: 12px 16px; box-shadow: 0 14px 30px rgba(0,0,0,.4);
+}
+.key-panel h4 { margin: 0 0 2px; font-size: 11px; letter-spacing: .12em; text-transform: uppercase; color: var(--muted); }
+.key-panel span { display: flex; align-items: center; gap: 8px; }
+.key-panel i { width: 12px; height: 12px; border-radius: 4px; display: inline-block; flex: none; }
+
+.tip { font-family: var(--body); background: var(--snow); color: var(--ink); padding: 8px 12px; border-radius: 12px; font-size: 13px; box-shadow: 0 8px 20px rgba(0,0,0,.3); max-width: 220px; }
+.tip strong { display: block; color: var(--holly); font-size: 14px; }
+
+.toast {
+  position: fixed; z-index: 30; left: 50%; top: calc(env(safe-area-inset-top, 0px) + 86px); transform: translateX(-50%);
+  background: var(--snow); color: var(--ink); border-radius: 999px; padding: 9px 18px; font-size: 13px; font-weight: 500;
+  box-shadow: 0 10px 30px rgba(0,0,0,.35); max-width: calc(100vw - 32px); text-align: center;
+}
+
+/* ---------- mode toggle (shared by welcome card and film panel) ---------- */
+.seg { display: inline-grid; grid-template-columns: 1fr 1fr; background: rgba(0,0,0,.28); border: 1px solid var(--glass-line); border-radius: 999px; padding: 4px; gap: 4px; }
+.seg button { border: 0; border-radius: 999px; padding: 8px 16px; background: transparent; color: var(--on-red); font-weight: 600; font-size: 14px; cursor: pointer; white-space: nowrap; }
+.seg button[aria-checked="true"] { background: var(--snow); color: var(--holly); box-shadow: 0 4px 10px rgba(0,0,0,.2); }
+.seg.small button { padding: 5px 12px; font-size: 12.5px; }
+
+/* ---------- welcome card ---------- */
+.scrim { position: fixed; inset: 0; z-index: 10; background: rgba(12,4,6,.55); backdrop-filter: blur(3px); }
+.welcome {
+  position: fixed; z-index: 12; left: 50%; top: 50%; transform: translate(-50%,-50%);
+  width: min(640px, calc(100vw - 24px)); max-height: calc(100% - 32px); overflow-y: auto;
+  background: linear-gradient(160deg, rgba(58,19,23,.94), rgba(23,10,12,.96));
+  border: 1px solid rgba(255,255,255,.14); border-radius: var(--r-lg); box-shadow: 0 40px 90px rgba(0,0,0,.6);
+  padding: 40px 40px 34px; display: grid; gap: 18px;
+}
+.welcome h1 { margin: 0; font-size: clamp(42px, 8vw, 68px); text-shadow: 0 5px 0 rgba(0,0,0,.35), 0 10px 30px rgba(0,0,0,.45); text-wrap: balance; }
+.welcome p { margin: 0; font-size: 17px; color: rgba(255,244,241,.86); max-width: 46ch; }
+.welcome .mode { display: grid; gap: 8px; justify-items: start; }
+.welcome .mode-label { font-size: 11px; letter-spacing: .14em; text-transform: uppercase; color: rgba(255,244,241,.7); font-weight: 600; }
+.welcome .mode-help { font-size: 13.5px; color: rgba(255,244,241,.78); min-height: 2.9em; max-width: 52ch; }
+.cta-row { display: flex; gap: 10px; flex-wrap: wrap; }
+.x {
+  position: absolute; right: 18px; top: 18px; width: 40px; height: 40px; border-radius: 50%; border: 0; cursor: pointer;
+  background: var(--glass); color: var(--on-red); display: grid; place-items: center;
+}
+.x:hover { background: var(--snow); color: var(--holly); }
+
+/* ---------- film panel ---------- */
+.modal {
+  position: fixed; z-index: 11; left: 50%; top: 50%; transform: translate(-50%,-50%);
+  width: min(800px, calc(100vw - 24px)); height: min(880px, calc(100% - 40px));
+  background: linear-gradient(170deg, var(--holly) 0%, var(--holly-deep) 100%);
+  border-radius: var(--r-lg); box-shadow: 0 40px 90px rgba(0,0,0,.55), inset 0 0 0 1px rgba(255,255,255,.18);
+  display: flex; flex-direction: column; overflow: hidden;
+}
+.modal-head { position: relative; padding: 26px 28px 16px; display: grid; gap: 14px; }
+.head-top { display: grid; grid-template-columns: minmax(0,1fr) auto; grid-template-areas: "title side" "sub side"; gap: 6px 20px; align-items: start; }
+.head-title { grid-area: title; }
+.head-sub { grid-area: sub; }
+.head-side { grid-area: side; display: flex; flex-direction: column; align-items: flex-end; gap: 14px; }
+.close {
+  width: 42px; height: 42px; border-radius: 50%; border: 0; cursor: pointer; flex: none;
+  background: var(--snow); color: var(--holly); display: grid; place-items: center; box-shadow: 0 6px 16px rgba(0,0,0,.18);
+}
+.close:hover { background: #fff; transform: scale(1.05); }
+.modal h2 { margin: 0; font: 700 clamp(30px, 5vw, 44px)/1.02 var(--body); letter-spacing: -.01em; text-wrap: balance; }
+.modal .sub { margin: 0; color: rgba(255,244,241,.85); font-size: 14px; max-width: 56ch; }
+.controls { display: flex; flex-wrap: wrap; gap: 10px 16px; align-items: center; }
+
+.tabs { display: flex; gap: 6px; flex-wrap: wrap; align-items: center; }
+.tab {
+  border: 1px solid var(--glass-line); background: var(--glass); color: var(--on-red);
+  border-radius: 999px; padding: 6px 13px; font-size: 13px; font-weight: 600; cursor: pointer;
+  display: inline-flex; align-items: center; gap: 6px; font-variant-numeric: tabular-nums;
+}
+.tab small { font-size: 11px; opacity: .75; font-weight: 500; }
+.tab[aria-pressed="true"] { background: var(--snow); color: var(--holly); border-color: var(--snow); }
+.tab:disabled { opacity: .38; cursor: not-allowed; }
+.filter-label { font-size: 12px; color: rgba(255,244,241,.75); margin-right: 2px; }
+
+.list-wrap { position: relative; flex: 1; min-height: 0; margin: 0 14px; background: var(--glass); border-radius: var(--r-md) var(--r-md) 0 0; border: 1px solid rgba(255,255,255,.16); border-bottom: 0; }
+.list { position: absolute; inset: 0; overflow-y: auto; padding: 12px 12px 24px; display: grid; gap: 10px; align-content: start; overscroll-behavior: contain; scrollbar-width: thin; scrollbar-color: rgba(255,255,255,.4) transparent; }
+
+.film {
+  display: grid; grid-template-columns: 84px minmax(0,1fr) auto 184px; grid-template-areas: "p n r w";
+  column-gap: 18px; row-gap: 10px; align-items: center;
+  background: var(--snow); color: var(--ink); border-radius: var(--r-md); padding: 12px 16px 12px 12px;
+  box-shadow: 0 6px 16px rgba(60,6,10,.18);
+}
+.poster { grid-area: p; position: relative; width: 84px; aspect-ratio: 2/3; border-radius: 12px; overflow: hidden; background: var(--sage); max-width: 100%; }
+.poster img { width: 100%; height: 100%; object-fit: cover; display: block; }
+.rank { position: absolute; left: 5px; top: 5px; min-width: 24px; height: 24px; padding: 0 6px; border-radius: 999px; background: var(--holly); color: #fff; font: 700 13px/24px var(--title); text-align: center; box-shadow: 0 2px 6px rgba(0,0,0,.3); }
+.name { grid-area: n; min-width: 0; }
+.name h3 { margin: 0; font: 700 23px/1.08 var(--title); color: var(--pine); letter-spacing: .005em; text-wrap: balance; }
+.meta { margin-top: 6px; display: flex; flex-wrap: wrap; gap: 6px 10px; align-items: center; font-size: 12px; color: var(--muted); font-variant-numeric: tabular-nums; }
+.rating { border: 1.5px solid var(--pine); color: var(--pine); border-radius: 6px; padding: 0 6px; font-weight: 700; font-size: 11px; letter-spacing: .04em; line-height: 18px; white-space: nowrap; }
+.rating.hot { border-color: var(--holly); color: var(--holly); }
+.rating.us { border-style: dashed; border-color: #A99597; color: var(--muted); font-weight: 600; }
+.origin { font-size: 11.5px; color: var(--muted); }
+.runtime { grid-area: r; font: 700 22px var(--title); color: var(--ink); white-space: nowrap; font-variant-numeric: tabular-nums; text-align: right; }
+.runtime small { display: block; font: 500 11px var(--body); color: var(--muted); letter-spacing: .04em; text-transform: uppercase; }
+
+.watch { grid-area: w; display: grid; gap: 6px; align-content: center; min-width: 0; }
+.watch h4 { margin: 0 0 1px; font-size: 10.5px; letter-spacing: .12em; text-transform: uppercase; color: var(--muted); font-weight: 600; }
+.svc {
+  display: flex; align-items: center; justify-content: space-between; gap: 8px; width: 100%; min-width: 0; overflow: hidden;
+  border-radius: 10px; padding: 7px 9px 7px 12px; font-size: 13px; font-weight: 600; text-decoration: none;
+  background: var(--holly); color: #fff; box-shadow: 0 3px 8px rgba(200,35,46,.25);
+}
+.svc .lbl { min-width: 0; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+.svc:hover { background: var(--holly-deep); }
+.svc .play { width: 18px; height: 18px; border-radius: 50%; background: rgba(255,255,255,.22); display: grid; place-items: center; flex: none; }
+.svc.via { background: #fff; color: var(--holly); box-shadow: inset 0 0 0 1.5px var(--holly); }
+.svc.via .play { background: rgba(200,35,46,.12); }
+.svc.na { justify-content: center; background: transparent; color: var(--muted); box-shadow: none; border: 1.5px dashed #CDB9BB; font-weight: 500; cursor: default; }
+.empty { color: var(--on-red); text-align: center; padding: 40px 10px; }
+
+.modal-foot { padding: 12px 28px 16px; font-size: 11.5px; color: rgba(255,244,241,.8); background: var(--holly-deep); display: flex; gap: 6px 16px; flex-wrap: wrap; justify-content: space-between; }
+.modal-foot a { color: #fff; }
+
+@media (max-width: 640px) {
+  .welcome { padding: 34px 20px 24px; top: auto; bottom: 0; transform: translateX(-50%); border-radius: 28px 28px 0 0; width: 100vw; padding-bottom: calc(env(safe-area-inset-bottom, 0px) + 24px); }
+  .welcome p { font-size: 15.5px; }
+  .modal { width: 100vw; height: calc(100% - 28px); top: auto; bottom: 0; transform: translateX(-50%); border-radius: 28px 28px 0 0; }
+  .modal-head { padding: 22px 16px 12px; }
+  .head-top { grid-template-columns: minmax(0,1fr) auto; grid-template-areas: "title close" "seg seg" "sub sub"; gap: 12px; }
+  .head-side { display: contents; }
+  .head-side .close { grid-area: close; }
+  .head-side .seg { grid-area: seg; justify-self: end; }
+  .modal h2 { font-size: 30px; }
+  .modal .sub { font-size: 13.5px; }
+  .close { width: 38px; height: 38px; }
+  .list-wrap { margin: 0 8px; }
+  .film { grid-template-columns: 64px minmax(0,1fr); grid-template-areas: "p n" "p r" "w w"; gap: 6px 12px; align-items: start; }
+  .poster { width: 64px; }
+  .name { align-self: end; }
+  .runtime { text-align: left; font-size: 19px; }
+  .runtime small { display: inline; margin-left: 6px; }
+  .watch { margin-top: 6px; border-top: 1px dashed #E6D7D4; padding-top: 10px; }
+  .modal-foot { padding: 10px 16px calc(env(safe-area-inset-bottom, 0px) + 12px); }
+  .key { bottom: calc(env(safe-area-inset-bottom, 0px) + 16px); }
+}
+@media (prefers-reduced-motion: reduce) {
+  .bulb { animation: none; }
+}
+</style>
+
+<div id="globe" aria-label="Interactive globe of countries" role="application"></div>
+<canvas id="snow" aria-hidden="true"></canvas>
+<svg class="lights" id="lights" aria-hidden="true" preserveAspectRatio="none"></svg>
+
+<header class="bar">
+  <button class="pill brand" id="home" type="button" aria-label="Christmas Watchlist: open the welcome card">
+    <span class="wordmark">Christmas Watchlist</span>
+    <span class="mode-chip" id="modeChip">US movies</span>
+  </button>
+</header>
+
+<div class="key" id="key">
+  <button class="key-btn" id="keyBtn" type="button" aria-expanded="false" aria-controls="keyPanel" aria-label="Map key">?</button>
+  <div class="key-panel" id="keyPanel" role="tooltip" hidden></div>
+</div>
+
+<div class="toast" id="toast" role="status" hidden></div>
+
+<!-- Welcome card -->
+<div class="scrim" id="wScrim" hidden></div>
+<section class="welcome" id="welcome" role="dialog" aria-modal="true" aria-labelledby="wTitle" hidden>
+  <button class="x" id="wClose" type="button" aria-label="Close and explore the globe">
+    <svg width="16" height="16" viewBox="0 0 24 24" aria-hidden="true"><path d="M6 6l12 12M18 6 6 18" stroke="currentColor" stroke-width="2.6" stroke-linecap="round"/></svg>
+  </button>
+  <h1 class="wordmark" id="wTitle">Christmas Watchlist</h1>
+  <p>Spin the globe and tap a country to see the Christmas films it watches most, ranked, rated and linked straight to the stream.</p>
+  <div class="mode">
+    <span class="mode-label" id="wModeLabel">Show me</span>
+    <div class="seg" role="radiogroup" aria-labelledby="wModeLabel" data-seg>
+      <button type="button" role="radio" data-mode="us">US movies</button>
+      <button type="button" role="radio" data-mode="local">Country specific</button>
+    </div>
+    <div class="mode-help" id="wHelp"></div>
+  </div>
+  <div class="cta-row">
+    <button class="btn btn-red" id="openUK" type="button">
+      <svg width="16" height="16" viewBox="0 0 24 24" aria-hidden="true"><path d="M8 5v14l11-7z" fill="currentColor"/></svg>
+      Open United Kingdom
+    </button>
+    <button class="btn btn-ghost" id="spinMe" type="button">Spin to my country</button>
+  </div>
+</section>
+
+<!-- Film panel -->
+<div class="scrim" id="scrim" hidden></div>
+<div class="modal" id="modal" role="dialog" aria-modal="true" aria-labelledby="mTitle" hidden>
+  <div class="modal-head">
+    <div class="head-top">
+      <h2 class="head-title" id="mTitle">United Kingdom</h2>
+      <p class="sub head-sub" id="mSub"></p>
+      <div class="head-side">
+        <button class="close" id="mClose" type="button" aria-label="Close">
+          <svg width="16" height="16" viewBox="0 0 24 24" aria-hidden="true"><path d="M6 6l12 12M18 6 6 18" stroke="currentColor" stroke-width="2.6" stroke-linecap="round"/></svg>
+        </button>
+        <div class="seg small" role="radiogroup" aria-label="Which films" data-seg>
+          <button type="button" role="radio" data-mode="us">US movies</button>
+          <button type="button" role="radio" data-mode="local">Country specific</button>
+        </div>
+      </div>
+    </div>
+    <div class="tabs" role="group" aria-label="Filter by rating" id="tabs"></div>
+  </div>
+  <div class="list-wrap"><div class="list" id="list"></div></div>
+  <div class="modal-foot" id="mFoot"></div>
+</div>
+
+<script src="https://cdn.jsdelivr.net/npm/globe.gl@2.46.2/dist/globe.gl.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/gsap@3.15.0/dist/gsap.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/gsap@3.15.0/dist/ScrollTrigger.min.js"></script>
+<script>
+const LINK_REGION = "US";                 // only region with verified watch links today
+const reduceMotion = matchMedia("(prefers-reduced-motion: reduce)").matches;
+const $ = s => document.querySelector(s);
+const esc = s => String(s ?? "").replace(/[&<>"']/g, c => ({ "&": "&amp;", "<": "&lt;", ">": "&gt;", '"': "&quot;", "'": "&#39;" }[c]));
+const hm = m => `${Math.floor(m / 60)}h ${String(m % 60).padStart(2, "0")}m`;
+const store = { get(k) { try { return localStorage.getItem(k); } catch (e) { return null; } }, set(k, v) { try { localStorage.setItem(k, v); } catch (e) {} } };
+
+const MODES = {
+  us: {
+    label: "US movies",
+    help: "The films each country watches most at Christmas, keeping only those made in the United States. Rated by the US system (G, PG, PG-13, R).",
+    key: "us"
+  },
+  local: {
+    label: "Country specific",
+    help: "Christmas films made in each country, rated by that country's own board (the UK uses the BBFC: U, PG, 12A, 15). The US rating sits alongside.",
+    key: "lo"
+  }
+};
+let mode = store.get("cw-mode") === "local" ? "local" : "us";
+let MARKETS = {};
+
+/* ===== Visitor country, no permission prompt: time zone first, then browser language ===== */
+const TZ = { "Europe/London": "GB", "Europe/Belfast": "GB", "Europe/Dublin": "IE", "Europe/Paris": "FR", "Europe/Berlin": "DE", "Europe/Madrid": "ES", "Europe/Rome": "IT", "Europe/Amsterdam": "NL", "Europe/Stockholm": "SE", "Europe/Oslo": "NO", "Europe/Copenhagen": "DK", "Europe/Warsaw": "PL", "Europe/Kyiv": "UA", "Europe/Kiev": "UA", "Asia/Tokyo": "JP", "Asia/Kolkata": "IN", "Asia/Calcutta": "IN", "Australia/Sydney": "AU", "Australia/Melbourne": "AU", "Pacific/Auckland": "NZ", "America/Sao_Paulo": "BR", "America/Mexico_City": "MX", "America/Toronto": "CA", "America/Vancouver": "CA", "America/New_York": "US", "America/Chicago": "US", "America/Denver": "US", "America/Phoenix": "US", "America/Los_Angeles": "US", "America/Anchorage": "US", "Pacific/Honolulu": "US" };
+function detectCountry() {
+  let tz = ""; try { tz = Intl.DateTimeFormat().resolvedOptions().timeZone || ""; } catch (e) {}
+  if (TZ[tz]) return TZ[tz];
+  for (const l of (navigator.languages || [navigator.language || ""])) { const m = /-([A-Z]{2})$/i.exec(l); if (m) return m[1].toUpperCase(); }
+  return null;
+}
+const visitorISO = detectCountry();
+
+/* ===== Globe ===== */
+let globe, features = [], hoverF = null;
+const COL = { live: "rgba(200,35,46,.95)", liveHover: "rgba(232,64,72,1)", soon: "rgba(63,107,82,.85)", soonHover: "rgba(96,150,118,.95)", none: "rgba(58,35,38,.85)", noneHover: "rgba(90,58,62,.95)", side: "rgba(20,8,10,.6)", stroke: "rgba(255,240,230,.55)" };
+const st = f => f.properties[MODES[mode].key === "us" ? "st" : "lo"];
+const capColor = f => COL[st(f) + (f === hoverF ? "Hover" : "")];
+const altFor = f => st(f) === "live" ? 0.03 : (f === hoverF ? 0.018 : 0.006);
+const homeView = () => ({ lat: 38, lng: -18, altitude: innerWidth < 640 ? 3.2 : 2.3 });
+
+function statusNote(s) {
+  if (mode === "us") return s === "live" ? "Tap to open the Top 10" : s === "soon" ? "Top 10 ready for the full build" : "No ranking in this edition";
+  return s === "live" ? "Tap to open its films" : s === "soon" ? "Films listed; live in the full build" : "No local list in this edition";
+}
+function initGlobe(geo) {
+  features = geo.features;
+  const el = $("#globe");
+  globe = new Globe(el, { rendererConfig: { antialias: true, alpha: true } })
+    .backgroundColor("rgba(0,0,0,0)")
+    .showGlobe(true)
+    .showAtmosphere(false)
+    .polygonsData(features)
+    .polygonCapColor(capColor)
+    .polygonSideColor(() => COL.side)
+    .polygonStrokeColor(() => COL.stroke)
+    .polygonAltitude(altFor)
+    .polygonsTransitionDuration(reduceMotion ? 0 : 280)
+    .polygonLabel(f => `<div class="tip"><strong>${esc(f.properties.n)}</strong>${esc(statusNote(st(f)))}</div>`)
+    .onPolygonHover(f => { hoverF = f; el.style.cursor = f && st(f) === "live" ? "pointer" : f ? "help" : "grab"; repaint(); })
+    .onPolygonClick(onCountry)
+    .width(innerWidth).height(innerHeight);
+  const mat = globe.globeMaterial();
+  mat.color && mat.color.set("#2A0F13");
+  if (mat.emissive) { mat.emissive.set("#1A0709"); mat.emissiveIntensity = 0.6; }
+  if ("shininess" in mat) mat.shininess = 6;
+  const ctl = globe.controls();
+  ctl.autoRotate = !reduceMotion; ctl.autoRotateSpeed = 0.02; ctl.enableZoom = true; ctl.minDistance = 180; ctl.maxDistance = 520;
+  globe.pointOfView(homeView(), 0);
+  addEventListener("resize", () => globe.width(innerWidth).height(innerHeight));
+}
+function repaint() { if (globe) globe.polygonCapColor(capColor).polygonAltitude(altFor); }
+
+const snap5 = gsap.utils.snap(5);
+function flyTo(lat, lng, ms = 1300) {
+  if (!globe) return Promise.resolve();
+  globe.controls().autoRotate = false;
+  return new Promise(res => {
+    globe.pointOfView({ lat: snap5(lat), lng: snap5(lng), altitude: innerWidth < 640 ? 2.4 : 1.7 }, reduceMotion ? 0 : ms);
+    setTimeout(res, reduceMotion ? 0 : ms * 0.75);
+  });
+}
+function onCountry(f) {
+  if (!f) return;
+  const p = f.properties, s = st(f);
+  if (s === "live") { flyTo(p.ly, p.lx).then(() => openMarket(p.iso)); return; }
+  showToast(`${p.n}: ${statusNote(s).replace("Tap to open its films", "")}.`);
+}
+
+let toastT;
+function showToast(msg) {
+  const t = $("#toast"); t.textContent = msg; t.hidden = false;
+  gsap.fromTo(t, { y: -12, opacity: 0 }, { y: 0, opacity: 1, duration: .3, ease: "power2.out" });
+  clearTimeout(toastT); toastT = setTimeout(() => gsap.to(t, { opacity: 0, duration: .3, onComplete: () => (t.hidden = true) }), 3400);
+}
+
+/* ===== Map key ("?") ===== */
+function renderKey() {
+  const rows = mode === "us"
+    ? [["#C8232E", "Live in this mockup"], ["#3F6B52", "Top 10 ready for the full build"], ["#3A2326", "No ranking in this edition"]]
+    : [["#C8232E", "Live in this mockup"], ["#3F6B52", "Local films listed, live in the full build"], ["#3A2326", "No local list in this edition"]];
+  $("#keyPanel").innerHTML = `<h4>Map key · ${esc(MODES[mode].label)}</h4>` + rows.map(([c, t]) => `<span><i style="background:${c}"></i>${esc(t)}</span>`).join("");
+}
+(() => {
+  const key = $("#key"), btn = $("#keyBtn"), panel = $("#keyPanel"); let pinned = false;
+  const show = v => { panel.hidden = !v; btn.setAttribute("aria-expanded", v); };
+  key.addEventListener("mouseenter", () => show(true));
+  key.addEventListener("mouseleave", () => { if (!pinned) show(false); });
+  btn.addEventListener("focus", () => show(true));
+  btn.addEventListener("blur", () => { if (!pinned) show(false); });
+  btn.addEventListener("click", () => { pinned = !pinned; show(pinned); });
+  document.addEventListener("click", e => { if (pinned && !key.contains(e.target)) { pinned = false; show(false); } });
+})();
+
+/* ===== Mode toggle ===== */
+function setMode(m, { rerender = true } = {}) {
+  mode = m; store.set("cw-mode", m);
+  document.querySelectorAll("[data-seg] button").forEach(b => b.setAttribute("aria-checked", b.dataset.mode === m));
+  $("#wHelp").textContent = MODES[m].help;
+  $("#modeChip").textContent = MODES[m].label;
+  renderKey(); repaint();
+  if (rerender && current && !$("#modal").hidden) { filter = "All"; renderPanel(true); }
+}
+document.querySelectorAll("[data-seg]").forEach(seg => seg.addEventListener("click", e => {
+  const b = e.target.closest("button[data-mode]"); if (b && b.dataset.mode !== mode) setMode(b.dataset.mode);
+}));
+document.querySelectorAll("[data-seg]").forEach(seg => seg.addEventListener("keydown", e => {
+  if (!["ArrowLeft", "ArrowRight"].includes(e.key)) return;
+  const next = mode === "us" ? "local" : "us"; setMode(next); seg.querySelector(`[data-mode="${next}"]`).focus();
+}));
+
+/* ===== Welcome card (first visit; the title pill reopens it) ===== */
+let lastFocus = null;
+function openWelcome() {
+  lastFocus = document.activeElement;
+  $("#wScrim").hidden = false; $("#welcome").hidden = false;
+  if (!reduceMotion) gsap.timeline()
+    .fromTo("#wScrim", { opacity: 0 }, { opacity: 1, duration: .35 })
+    .fromTo("#welcome", { y: 50, opacity: 0, scale: .96 }, { y: 0, opacity: 1, scale: 1, duration: .65, ease: "back.out(1.4)" }, "<.05")
+    .fromTo("#welcome > *:not(.x)", { y: 16, opacity: 0 }, { y: 0, opacity: 1, stagger: .07, duration: .45, ease: "power3.out" }, "<.15");
+  $("#openUK").focus();
+}
+function closeWelcome(then) {
+  store.set("cw-welcomed", "1");
+  const done = () => { $("#welcome").hidden = true; $("#wScrim").hidden = true; gsap.set("#welcome", { clearProps: "all" }); then ? then() : (lastFocus && lastFocus.focus && lastFocus.focus()); };
+  if (reduceMotion) return done();
+  gsap.timeline({ onComplete: done }).to("#welcome", { y: 30, opacity: 0, duration: .25, ease: "power2.in" }).to("#wScrim", { opacity: 0, duration: .2 }, "<.05");
+}
+$("#wClose").addEventListener("click", () => closeWelcome());
+$("#wScrim").addEventListener("click", () => closeWelcome());
+$("#home").addEventListener("click", () => {
+  if (!$("#modal").hidden) closeModal();
+  globe && globe.pointOfView(homeView(), reduceMotion ? 0 : 1200);
+  openWelcome();
+});
+$("#openUK").addEventListener("click", () => closeWelcome(() => { const g = MARKETS.GB; if (!g) return showToast("Still loading the list. Try again in a moment."); flyTo(g.lat, g.lng).then(() => openMarket("GB")); }));
+$("#spinMe").addEventListener("click", () => closeWelcome(() => {
+  const f = features.find(x => x.properties.iso === visitorISO);
+  if (!f) return showToast("We couldn't tell your country from this device. Spin the globe and tap it instead.");
+  flyTo(f.properties.ly, f.properties.lx).then(() => {
+    if (st(f) === "live") openMarket(f.properties.iso);
+    else showToast(`${f.properties.n}: ${statusNote(st(f))}.`);
+  });
+}));
+
+/* ===== Film panel ===== */
+gsap.registerPlugin(ScrollTrigger);
+gsap.ticker.lagSmoothing(0);              // keep animation timing true on slow GPUs
+let current = null, filter = "All", panelFocus = null, batchTriggers = [], snapTrigger = null;
+
+const US_SCALE = ["G", "PG", "PG-13", "R"];
+const ratingGroup = (f) => mode === "us" ? (/^TV/.test(f.rating) ? "TV" : (f.rating || "Unverified")) : (f.rating || "Unverified");
+function tabsFor(data) {
+  return mode === "us" ? ["All", ...US_SCALE, "TV", "Unverified"] : ["All", ...data.scale, "Unverified"];
+}
+const list = () => current[mode];
+const shown = () => filter === "All" ? list().films : list().films.filter(f => ratingGroup(f) === filter);
+
+function renderTabs() {
+  const data = list(), counts = {};
+  data.films.forEach(f => { const k = ratingGroup(f); counts[k] = (counts[k] || 0) + 1; });
+  const label = mode === "us" ? "US rating" : `${data.authority} rating`;
+  $("#tabs").innerHTML = `<span class="filter-label">${esc(label)}</span>` + tabsFor(data).map(r => {
+    const n = r === "All" ? data.films.length : (counts[r] || 0);
+    return `<button class="tab" type="button" data-r="${esc(r)}" aria-pressed="${r === filter}" ${n ? "" : "disabled"}>${esc(r)} <small>${n}</small></button>`;
+  }).join("");
+}
+
+const PLAY = `<span class="play"><svg width="8" height="8" viewBox="0 0 24 24" aria-hidden="true"><path d="M7 4v16l13-8z" fill="currentColor"/></svg></span>`;
+const MAX_WAYS = 3;                       // priority: Stream, then Free, then Rent / buy
+function svcButton(f, s) {
+  const lbl = `<span class="lbl">${esc(s.name)}</span>`;
+  if (s.url) return `<a class="svc" href="${esc(s.url)}" target="_blank" rel="noopener" title="${esc(s.name)}" aria-label="Watch ${esc(f.title)} on ${esc(s.name)}">${lbl} ${PLAY}</a>`;
+  return `<a class="svc via" href="${esc(f.jw)}" target="_blank" rel="noopener" title="${esc(s.name)} has no direct film link; opens the JustWatch listing" aria-label="Find ${esc(f.title)} on ${esc(s.name)} via JustWatch">${lbl} ${PLAY}</a>`;
+}
+function watchHTML(f) {
+  const w = (f.watch && f.watch[LINK_REGION]) || {};
+  const ways = [...(w.stream || []), ...(w.free || []), ...(w.rentbuy || [])].slice(0, MAX_WAYS);
+  const body = ways.length ? ways.map(s => svcButton(f, s)).join("")
+    : `<span class="svc na" aria-label="Unavailable in the United States">Unavailable</span>`;
+  return `<h4>Where to watch</h4>${body}`;
+}
+const ORIGIN_SHORT = { "United States": "US", "United Kingdom": "UK", "France": "France", "Germany": "Germany", "Czechia": "Czechia", "Poland": "Poland" };
+function originText(f) {
+  const o = f.origin.map(x => ORIGIN_SHORT[x] || x);
+  return o.length === 1 ? `Made in ${o[0]}` : `${o.join(" · ")} co-production`;
+}
+function filmHTML(f) {
+  const ratingChips = mode === "us"
+    ? `<span class="rating${f.rating === "R" ? " hot" : ""}" title="${f.cert ? "MPA certificate #" + esc(f.cert) : "US rating"}">${esc(f.rating)}</span>`
+    : `<span class="rating${/^(15|18)$/.test(f.rating) ? " hot" : ""}" title="${esc(list().authority)} rating">${esc(list().authority)} ${esc(f.rating)}</span>` +
+      (f.usr ? `<span class="rating us" title="US rating">US ${esc(f.usr)}</span>` : `<span class="rating us" title="No US rating found">US –</span>`);
+  const extra = mode === "us" ? `<span>Index ${f.index.toFixed(1)}</span>` : "";
+  return `<article class="film">
+    <div class="poster"><img src="${esc(f.poster)}" alt="Poster for ${esc(f.title)}" loading="lazy" width="84" height="126"><span class="rank" aria-label="${mode === "us" ? "UK rank" : "List number"} ${f.pos}">${f.pos}</span></div>
+    <div class="name">
+      <h3>${esc(f.title)}</h3>
+      <div class="meta">${ratingChips}<span>${f.year}</span>${extra}</div>
+      <div class="meta origin">${esc(originText(f))}${f.originSrc === "justwatch" ? " (origin per JustWatch)" : ""}</div>
+    </div>
+    <div class="runtime">${hm(f.min)}<small>${f.min} min</small></div>
+    <div class="watch">${watchHTML(f)}</div>
+  </article>`;
+}
+
+function renderList() {
+  const items = shown();
+  $("#list").innerHTML = items.length ? items.map(filmHTML).join("") : `<p class="empty">No films in this list carry that rating.</p>`;
+  wireMotion();
+}
+function renderPanel(animate) {
+  const m = current, isUS = mode === "us";
+  $("#mTitle").textContent = m.name;
+  $("#mSub").textContent = isUS
+    ? `From the ${m.code}'s Christmas Top 10 (combined TV, Netflix and JustWatch evidence), keeping the films made in the United States. Numbers are the ${m.code} ranks.`
+    : `Christmas films produced in the ${m.code}, rated by the ${m.local.authority}. Numbered in research order, not by audience size.`;
+  $("#mFoot").innerHTML = isUS
+    ? `<span>Watch links: United States, from JustWatch, checked 24–26 Nov 2026. Ratings: MPA, checked 25 Nov 2026.</span><span>Index is a composite estimate, not a viewer count.</span>`
+    : `<span>Watch links: United States, from JustWatch, checked 24–26 Nov 2026. Ratings: ${esc(m.local.authority)}, checked 25 Nov 2026.</span><span>A research selection, not a viewing ranking.</span>`;
+  renderTabs();
+  if (animate && !reduceMotion) {
+    gsap.to("#list .film", { opacity: 0, y: -14, duration: .16, stagger: .02, onComplete: renderList });
+    gsap.fromTo("#tabs .tab", { y: 8, opacity: 0 }, { y: 0, opacity: 1, stagger: .03, duration: .25 });
+  } else renderList();
+}
+
+/* GSAP batch: rows stagger in as they enter the list's viewport.
+   GSAP snap: the list settles on the nearest row edge after a scroll. */
+function wireMotion() {
+  batchTriggers.forEach(t => t.kill()); batchTriggers = [];
+  if (snapTrigger) { snapTrigger.kill(); snapTrigger = null; }
+  const el = $("#list"), rows = [...el.querySelectorAll(".film")];
+  el.scrollTop = 0;
+  if (reduceMotion || !rows.length) return;
+  gsap.set(rows, { opacity: 0, y: 36, scale: .97 });
+  batchTriggers = ScrollTrigger.batch(rows, {
+    scroller: el, start: "top 98%", interval: 0.08, batchMax: 4,
+    onEnter: b => gsap.to(b, { opacity: 1, y: 0, scale: 1, stagger: 0.07, duration: 0.55, ease: "back.out(1.5)", overwrite: true })
+  });
+  const max = el.scrollHeight - el.clientHeight;
+  if (max > 8) {
+    const stops = rows.map(r => Math.min(1, (r.offsetTop - 12) / max)).concat(1);
+    snapTrigger = ScrollTrigger.create({ scroller: el, start: 0, end: "max",
+      snap: { snapTo: gsap.utils.snap(stops), duration: { min: .15, max: .45 }, delay: .08, ease: "power2.inOut" } });
+  }
+  ScrollTrigger.refresh();
+}
+
+function openMarket(iso) {
+  const m = MARKETS[iso]; if (!m) return;
+  current = m; filter = "All"; panelFocus = document.activeElement;
+  const scrim = $("#scrim"), modal = $("#modal");
+  scrim.hidden = false; modal.hidden = false;
+  renderPanel(false);
+  globe && globe.pauseAnimation();       // free the GPU while the list is up
+  if (!reduceMotion) {
+    const mobile = innerWidth <= 640;
+    gsap.timeline()
+      .fromTo(scrim, { opacity: 0 }, { opacity: 1, duration: .3 })
+      .fromTo(modal, mobile ? { yPercent: 40, opacity: 0 } : { y: 70, scale: .94, opacity: 0 },
+        mobile ? { yPercent: 0, opacity: 1, duration: .55, ease: "power3.out" } : { y: 0, scale: 1, opacity: 1, duration: .6, ease: "back.out(1.4)" }, "<.05")
+      .fromTo(".head-side > *", { x: 16, opacity: 0 }, { x: 0, opacity: 1, stagger: .08, duration: .4, ease: "power3.out" }, "<.15")
+      .fromTo("#tabs .tab", { y: 10, opacity: 0 }, { y: 0, opacity: 1, stagger: .04, duration: .3 }, "<.1");
+  }
+  $("#mClose").focus();
+}
+function closeModal() {
+  const scrim = $("#scrim"), modal = $("#modal");
+  const done = () => { modal.hidden = true; scrim.hidden = true; gsap.set(modal, { clearProps: "all" }); batchTriggers.forEach(t => t.kill()); if (snapTrigger) snapTrigger.kill();
+    if (globe) { globe.resumeAnimation(); globe.controls().autoRotate = !reduceMotion; } panelFocus && panelFocus.focus && panelFocus.focus(); };
+  if (reduceMotion) return done();
+  gsap.timeline({ onComplete: done }).to(modal, { y: 40, opacity: 0, duration: .25, ease: "power2.in" }).to(scrim, { opacity: 0, duration: .2 }, "<.05");
+}
+
+$("#tabs").addEventListener("click", e => {
+  const b = e.target.closest(".tab"); if (!b || b.disabled) return;
+  filter = b.dataset.r;
+  document.querySelectorAll("#tabs .tab").forEach(t => t.setAttribute("aria-pressed", t === b));
+  if (reduceMotion) return renderList();
+  gsap.to("#list .film", { opacity: 0, y: -14, duration: .18, stagger: .02, onComplete: renderList });
+});
+$("#mClose").addEventListener("click", closeModal);
+$("#scrim").addEventListener("click", closeModal);
+function trap(e, root) {
+  const f = [...root.querySelectorAll("button:not([disabled]), a[href]")].filter(x => x.offsetParent !== null); if (!f.length) return;
+  if (e.shiftKey && document.activeElement === f[0]) { e.preventDefault(); f[f.length - 1].focus(); }
+  else if (!e.shiftKey && document.activeElement === f[f.length - 1]) { e.preventDefault(); f[0].focus(); }
+}
+addEventListener("keydown", e => {
+  const w = !$("#welcome").hidden, m = !$("#modal").hidden;
+  if (e.key === "Escape") { if (w) closeWelcome(); else if (m) closeModal(); }
+  if (e.key === "Tab") { if (w) trap(e, $("#welcome")); else if (m) trap(e, $("#modal")); }
+});
+
+/* ===== String lights ===== */
+function drawLights() {
+  const svg = $("#lights"), w = innerWidth, h = 70, n = Math.max(8, Math.round(w / 70)), seg = w / n;
+  const cols = ["#F7C948", "#E8404A", "#6FCF97", "#7CC6FE", "#FFFFFF"];
+  let d = `M0 6`, bulbs = "";
+  for (let i = 0; i < n; i++) { const x0 = i * seg; d += ` Q${x0 + seg / 2} 30 ${x0 + seg} 6`; }
+  for (let i = 0; i < n * 2; i++) {
+    const x = ((i + .5) / (n * 2)) * w, local = (x % seg) / seg, y = 6 + 96 * local * (1 - local) / 4 * 1;
+    const c = cols[i % cols.length];
+    bulbs += `<g class="bulb" style="animation-delay:${(i * 0.37) % 2.6}s"><circle cx="${x}" cy="${y + 6}" r="9" fill="${c}" opacity=".22"/><circle cx="${x}" cy="${y + 6}" r="4" fill="${c}"/></g>`;
+  }
+  svg.setAttribute("viewBox", `0 0 ${w} ${h}`); svg.innerHTML = `<path d="${d}"/>${bulbs}`;
+}
+
+/* ===== Snow ===== */
+function startSnow() {
+  const c = $("#snow"), x = c.getContext("2d"); let flakes = [];
+  const size = () => { c.width = innerWidth * devicePixelRatio; c.height = innerHeight * devicePixelRatio; x.setTransform(devicePixelRatio, 0, 0, devicePixelRatio, 0, 0);
+    flakes = Array.from({ length: Math.round(innerWidth / 14) }, () => ({ x: Math.random() * innerWidth, y: Math.random() * innerHeight, r: Math.random() * 2 + .6, s: Math.random() * .5 + .25, d: Math.random() * 6.28 })); };
+  size(); addEventListener("resize", () => { size(); drawLights(); });
+  const draw = () => { x.clearRect(0, 0, innerWidth, innerHeight); x.fillStyle = "rgba(255,255,255,.75)";
+    for (const f of flakes) { x.beginPath(); x.arc(f.x, f.y, f.r, 0, 6.28); x.fill(); if (!reduceMotion) { f.y += f.s; f.d += .01; f.x += Math.sin(f.d) * .3; if (f.y > innerHeight) { f.y = -4; f.x = Math.random() * innerWidth; } } }
+    if (!reduceMotion) requestAnimationFrame(draw); };
+  draw();
+}
+
+/* ===== Boot ===== */
+drawLights(); startSnow(); setMode(mode, { rerender: false });
+if (!store.get("cw-welcomed")) openWelcome();
+Promise.all([fetch("data/countries.json").then(r => r.json()), fetch("data/markets.json").then(r => r.json())])
+  .then(([geo, markets]) => { MARKETS = markets; initGlobe(geo); repaint(); })
+  .catch(() => showToast("The globe could not load. Refresh the page to try again."));
+</script>
