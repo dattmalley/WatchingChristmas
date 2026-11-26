@@ -68,8 +68,10 @@ header.bar {
   display: inline-flex; align-items: center; gap: 8px; border-radius: 999px; border: 0; cursor: pointer;
   padding: 12px 22px; font-weight: 600; font-size: 15px; text-decoration: none;
 }
-.btn-red { background: var(--holly); color: #fff; box-shadow: 0 10px 26px rgba(200,35,46,.45); }
-.btn-red:hover { background: var(--holly-deep); }
+.btn-red { background: var(--holly); color: #fff; box-shadow: 0 10px 26px rgba(200,35,46,.45); transition: background .2s, color .2s, box-shadow .2s; }
+/* hover and keyboard focus invert to the look of the selected "US movies" pill: snow with holly text, no gold ring */
+.btn-red:hover, .btn-red:focus-visible { background: var(--snow); color: var(--holly); box-shadow: 0 4px 10px rgba(0,0,0,.2); outline: none; }
+.btn .emoji { font-size: 17px; line-height: 1; }
 .btn-ghost { background: var(--glass); color: var(--on-red); border: 1px solid var(--glass-line); }
 .btn-ghost:hover { background: rgba(255,255,255,.2); }
 
@@ -133,6 +135,7 @@ header.bar {
   border: 1px solid rgba(255,255,255,.14); border-radius: var(--r-lg); box-shadow: 0 40px 90px rgba(0,0,0,.6);
   padding: 40px 40px 34px; display: grid; gap: 18px;
 }
+.welcome:focus { outline: none; }
 .welcome h1 { margin: 0; font-size: clamp(42px, 8vw, 68px); text-shadow: 0 5px 0 rgba(0,0,0,.35), 0 10px 30px rgba(0,0,0,.45); text-wrap: balance; }
 .welcome p { margin: 0; font-size: 17px; color: rgba(255,244,241,.86); max-width: 46ch; }
 .welcome .mode { display: grid; gap: 8px; justify-items: start; }
@@ -291,7 +294,7 @@ header.bar {
 
 <!-- Welcome card -->
 <div class="scrim" id="wScrim" hidden></div>
-<section class="welcome" id="welcome" role="dialog" aria-modal="true" aria-labelledby="wTitle" hidden>
+<section class="welcome" id="welcome" role="dialog" aria-modal="true" aria-labelledby="wTitle" tabindex="-1" hidden>
   <button class="x" id="wClose" type="button" aria-label="Close and explore the globe">
     <svg width="16" height="16" viewBox="0 0 24 24" aria-hidden="true"><path d="M6 6l12 12M18 6 6 18" stroke="currentColor" stroke-width="2.6" stroke-linecap="round"/></svg>
   </button>
@@ -307,7 +310,7 @@ header.bar {
   </div>
   <div class="cta-row">
     <button class="btn btn-red" id="openMine" type="button">
-      <svg width="16" height="16" viewBox="0 0 24 24" aria-hidden="true"><path d="M8 5v14l11-7z" fill="currentColor"/></svg>
+      <span class="emoji" aria-hidden="true">🎄</span>
       <span id="openMineLbl">Open United Kingdom</span>
     </button>
     <button class="btn btn-ghost" id="explore" type="button">
@@ -586,7 +589,7 @@ function openWelcome() {
     .fromTo("#wScrim", { opacity: 0 }, { opacity: 1, duration: .35 })
     .fromTo("#welcome", { y: 50, opacity: 0, scale: .96 }, { y: 0, opacity: 1, scale: 1, duration: .65, ease: "back.out(1.4)" }, "<.05")
     .fromTo("#welcome > *:not(.x)", { y: 16, opacity: 0 }, { y: 0, opacity: 1, stagger: .07, duration: .45, ease: "power3.out" }, "<.15");
-  $("#openMine").focus();
+  $("#welcome").focus({ preventScroll: true });   // focus the card, not the button, so it opens without a focus ring
 }
 function closeWelcome(then) {
   const done = () => { $("#welcome").hidden = true; $("#wScrim").hidden = true; gsap.set("#welcome", { clearProps: "all" }); then ? then() : (lastFocus && lastFocus.focus && lastFocus.focus()); };
