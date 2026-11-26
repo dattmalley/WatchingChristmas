@@ -41,8 +41,8 @@ There is no separate "global" file. Each guide ends with a **Global Top Ten** se
   - the title in Cherry Swash red with a drop shadow and no outline;
   - the line "Spin the globe and tap a country to see the Christmas films it watches most, ranked, rated and linked straight to the stream.";
   - the toggle **US movies | Country specific** with one line of help;
-  - the CTAs "Open United Kingdom" and "Spin to my country".
-  "Spin to my country" guesses the country from the time zone or browser language. The artifact host blocks the geolocation API, so there's no permission prompt.
+  - one CTA, "Open <detected country>" (for example "Open France"), which flies to that country and opens its panel, or the Santa card if it has no data in the current mode.
+  The country is guessed from the time zone, then the browser language, falling back to the United Kingdom. The artifact host blocks the geolocation API, so there's no permission prompt. (This replaced the earlier "Open United Kingdom" and "Spin to my country" buttons; see section 4.)
 - **Toggle meaning (decided by Matt, don't change it):**
   - **US movies:** the clicked country's guide-1 most-watched list, keeping only films with **United States among their producing countries** (co-productions count). Numbers are that country's ranks. The filter uses US ratings: All, G, PG, PG-13, R, TV, Unverified. Each row shows the index score.
   - **Country specific:** the clicked country's guide-2 list of films made there, filtered by **that country's own rating** (UK: BBFC U, PG, 12A, 15, 18, Unverified), with the US rating shown beside it as a dashed chip. It's numbered in research order and labelled as not a viewing ranking. Never convert ratings between countries.
