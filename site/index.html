@@ -1,5 +1,9 @@
-<title>Watching Christmas</title>
+<!doctype html>
+<html lang="en">
 <meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<meta name="theme-color" content="#170A0C">
+<title>Watching Christmas</title>
 <meta name="claude:viewport-fit-sides" content="cover">
 <link rel="icon" type="image/svg+xml" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32'><rect width='32' height='32' rx='7' fill='%233A1317'/><path d='M16 5 9.5 14h3.5L8 21h4.5L7 27h18l-5.5-6H24l-5-7h3.5z' fill='%2300873E'/><rect x='14' y='27' width='4' height='3' rx='1' fill='%238B5A2B'/><path d='m16 2 1.2 2.5 2.7.3-2 1.8.6 2.7-2.5-1.4-2.5 1.4.6-2.7-2-1.8 2.7-.3z' fill='%23F7C948'/><circle cx='13.5' cy='16.5' r='1.6' fill='%23E5302F'/><circle cx='19' cy='19.5' r='1.6' fill='%23F7C948'/><circle cx='12' cy='24' r='1.6' fill='%23FFFCF8'/><circle cx='20.5' cy='25' r='1.6' fill='%23E5302F'/></svg>">
 <link rel="preconnect" href="https://fonts.googleapis.com">
@@ -419,6 +423,10 @@ header.bar {
 <script>
 const LINK_REGION = "US";                 // only region with verified watch links today
 const reduceMotion = matchMedia("(prefers-reduced-motion: reduce)").matches;
+/* Mobile: render the globe and snow at a capped pixel ratio. Phone screens are 2-3x; drawing the WebGL
+   canvas at full ratio with antialiasing overloads their GPUs. High-ratio screens need no antialias. */
+const touchDevice = matchMedia("(pointer: coarse)").matches || innerWidth < 640;
+const DPR = Math.min(devicePixelRatio || 1, touchDevice ? 1.5 : 2);
 const $ = s => document.querySelector(s);
 const esc = s => String(s ?? "").replace(/[&<>"']/g, c => ({ "&": "&amp;", "<": "&lt;", ">": "&gt;", '"': "&quot;", "'": "&#39;" }[c]));
 const hm = m => `${Math.floor(m / 60)}h ${String(m % 60).padStart(2, "0")}m`;
@@ -497,7 +505,7 @@ function keepLabelOnScreen(el) {
 function initGlobe(geo) {
   features = geo.features;
   const el = $("#globe");
-  globe = new Globe(el, { rendererConfig: { antialias: true, alpha: true } })
+  globe = new Globe(el, { rendererConfig: { antialias: DPR < 2 && !touchDevice, alpha: true, powerPreference: "high-performance" } })
     .backgroundColor("rgba(0,0,0,0)")
     .showGlobe(true)
     .showAtmosphere(false)
@@ -527,8 +535,10 @@ function initGlobe(geo) {
   if ("shininess" in mat) mat.shininess = 6;
   const ctl = globe.controls();
   ctl.autoRotate = !reduceMotion; ctl.autoRotateSpeed = 0.02; ctl.enableZoom = true; ctl.minDistance = 180; ctl.maxDistance = 520;
+  globe.renderer().setPixelRatio(DPR);
   globe.pointOfView(homeView(), 0);
-  addEventListener("resize", () => globe.width(innerWidth).height(innerHeight));
+  // phone browsers fire resize repeatedly as their toolbars slide; resize once per frame at most
+  let rz = 0; addEventListener("resize", () => { cancelAnimationFrame(rz); rz = requestAnimationFrame(() => globe.width(innerWidth).height(innerHeight)); });
 }
 function repaint() { if (globe) { globe.polygonCapColor(capColor).polygonCapMaterial(capMaterial).polygonAltitude(altFor); paintPins(); } }
 
@@ -914,7 +924,7 @@ function drawLights() {
 /* ===== Snow ===== */
 function startSnow() {
   const c = $("#snow"), x = c.getContext("2d"); let flakes = [];
-  const size = () => { c.width = innerWidth * devicePixelRatio; c.height = innerHeight * devicePixelRatio; x.setTransform(devicePixelRatio, 0, 0, devicePixelRatio, 0, 0);
+  const size = () => { c.width = innerWidth * DPR; c.height = innerHeight * DPR; x.setTransform(DPR, 0, 0, DPR, 0, 0);
     flakes = Array.from({ length: Math.round(innerWidth / 14) }, () => ({ x: Math.random() * innerWidth, y: Math.random() * innerHeight, r: Math.random() * 2 + .6, s: Math.random() * .5 + .25, d: Math.random() * 6.28 })); };
   size(); addEventListener("resize", () => { size(); drawLights(); });
   const draw = () => { x.clearRect(0, 0, innerWidth, innerHeight); x.fillStyle = "rgba(255,255,255,.75)";
